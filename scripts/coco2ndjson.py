@@ -1,9 +1,14 @@
 import json
+import glob
 import polars as pl
 
 
-OUTPUT = "./assets/coco/Test_coco.ndjson"
-FILE = "./assets/coco/annotations/instances_val2017.json"
+IMAGE_ROOT = "./assets/coco/images/train2017"
+OUTPUT = "./assets/preprocessed/Train_coco.ndjson"
+FILE = "./assets/coco/annotations/instances_train2017.json"
+
+
+IMAGE_FILES = glob.glob(r"*.*", root_dir=IMAGE_ROOT)
 
 
 with open(FILE) as f:
@@ -64,4 +69,17 @@ images = (
         })
 )
 
+# Add root path
+images = images.with_columns(pl.lit(IMAGE_ROOT).alias("image_root"))
+
+# Before file check up
+print(images)
+
+# Checks image existance
+images = images.filter(pl.col("file_name").is_in(IMAGE_FILES))
+
+# After file checkup
+print(images)
+
+# Save to disk
 images.write_ndjson(OUTPUT)
