@@ -40,7 +40,7 @@ class TagEncoder:
         del instances_file, tags_coco
         
     def __call__(self, sample: Series) -> Tensor:
-        tokens = sample.to_list()
+        tokens = sample
         val = F.one_hot(
             torch.tensor(self.voc.forward(tokens)), 
             num_classes=self.voclen

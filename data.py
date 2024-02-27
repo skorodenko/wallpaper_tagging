@@ -1,5 +1,5 @@
 import torch
-import polars as pl
+import pandas as pd
 import lightning as lg
 from models.utils import TagEncoder
 from pathlib import Path
@@ -14,21 +14,21 @@ class CustomDataset(Dataset):
         self.root = root
         self.transform = transform
         self.target_transform = target_transform
-        self.images = pl.read_ndjson(*files).with_row_count(name="idx")
+        self.images = pd.read_json(*files, lines=True)
 
     def __len__(self):
-        return self.images.select(pl.len()).item()
+        return len(self.images)
 
     def __getitem__(self, idx: int):
-        row = self.images.filter(pl.col("idx") == idx)
+        row = self.images.iloc[idx]
         image_path = Path(
             self.root,
-            row["image_root"].item(),
-            row["file_name"].item(),
+            row["image_root"],
+            row["file_name"],
         )
         image = read_image(str(image_path))
-        labels = row["labels"].item()
-        tags = row["tags"].item()
+        labels = row["labels"]
+        tags = row["tags"]
         if self.transform:
             image = self.transform(image)
         if self.target_transform:
@@ -90,13 +90,13 @@ class DataModule(lg.LightningDataModule):
             self.predict = self.test
             
     def train_dataloader(self):
-        return DataLoader(self.train, batch_size=self.batch_size, pin_memory=True)
+        return DataLoader(self.train, batch_size=self.batch_size, pin_memory=True, num_workers=6)
 
     def val_dataloader(self):
-        return DataLoader(self.val, batch_size=self.batch_size, pin_memory=True)
+        return DataLoader(self.val, batch_size=self.batch_size, pin_memory=True, num_workers=6)
 
     def test_dataloader(self):
-        return DataLoader(self.test, batch_size=self.batch_size, pin_memory=True)
+        return DataLoader(self.test, batch_size=self.batch_size, pin_memory=True, num_workers=6)
 
     def predict_dataloader(self):
-        return DataLoader(self.predict, batch_size=self.batch_size, pin_memory=True)
+        return DataLoader(self.predict, batch_size=self.batch_size, pin_memory=True, num_workers=6)

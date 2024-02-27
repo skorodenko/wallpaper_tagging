@@ -28,14 +28,13 @@ resnet = torchvision.models.resnet101(
     weights=torchvision.models.ResNet101_Weights.IMAGENET1K_V2
 )
 
-
 class FusionBlock(nn.Module):
     
     def __init__(self, in_planes: int, out_planes: int, main_layer: int, stride: int = 1):
         super().__init__()
         self.main_layer = getattr(resnet, f"layer{main_layer}")
-        if main_layer in [2, 3]:
-            self.main_layer.requires_grad_(False)
+        #if main_layer in [1,2,3,4]:
+        #    self.main_layer.requires_grad_(False)
         self.conv1 = nn.Sequential(
             conv3x3(in_planes, in_planes, stride),
             nn.BatchNorm2d(in_planes),
@@ -60,7 +59,8 @@ class MSCNN(lg.LightningModule):
     def __init__(self, lr = 0.001, weight_decay = 0.00001):
         super().__init__()
         self.save_hyperparameters()
-        self.conv1 = nn.Conv2d(3, 64, 7)
+        self.conv1 = resnet.conv1
+        #self.conv1.requires_grad_(False)
         self.fb1 = FusionBlock(64, 256, 1)
         self.fb2 = FusionBlock(256, 512, 2, 2)
         self.fb3 = FusionBlock(512, 1024, 3, 2)
@@ -99,7 +99,7 @@ class MSCNN(lg.LightningModule):
         loss = self.loss_module(pred, labels)
         #acc = (pred.argmax(dim=-1) == labels).float().mean()
         #self.log("train_acc", acc, on_step=False, on_epoch=True)
-        self.log("train_loss", loss, on_step=True)
+        self.log("train_loss", loss, on_step=True, prog_bar=True)
         return loss
     
     def validation_step(self, batch, batch_idx):
