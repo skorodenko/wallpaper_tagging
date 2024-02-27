@@ -1,11 +1,14 @@
 import json
 import glob
 import polars as pl
+from tqdm import tqdm
+from pathlib import Path
+from torchvision.io import read_image
 
 
-IMAGE_ROOT = "./assets/coco/images/train2017"
-OUTPUT = "./assets/preprocessed/Train_coco.ndjson"
-FILE = "./assets/coco/annotations/instances_train2017.json"
+IMAGE_ROOT = "./assets/coco/images/val2017"
+OUTPUT = "./assets/preprocessed/Test_coco.ndjson"
+FILE = "./assets/coco/annotations/instances_val2017.json"
 
 
 IMAGE_FILES = glob.glob(r"*.*", root_dir=IMAGE_ROOT)
@@ -77,6 +80,21 @@ print(images)
 
 # Checks image existance
 images = images.filter(pl.col("file_name").is_in(IMAGE_FILES))
+
+# Checks if images are not corrupted (by trying to read)
+dflen = images.select(pl.count("file_name")).item()
+print("Starting check for image corruption")
+dellist = []
+for row in tqdm(
+    images.select([pl.col("image_root"), pl.col("file_name")]).to_dicts()
+):
+    img = Path(row["image_root"], row["file_name"])
+    try:
+        read_image(str(img))
+    except RuntimeError:
+        dellist.append(row["file_name"])
+
+images = images.filter(~pl.col("file_name").is_in(dellist))
 
 # After file checkup
 print(images)
