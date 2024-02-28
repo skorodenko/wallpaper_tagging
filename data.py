@@ -14,7 +14,11 @@ class CustomDataset(Dataset):
         self.root = root
         self.transform = transform
         self.target_transform = target_transform
-        self.images = pd.read_json(*files, lines=True)
+        self.images = pd.read_json(files[0], lines=True)
+        if len(files) > 1:
+            for f in files[1:]:
+                tmp = pd.read_json(f, lines=True)
+                self.images = pd.concat([self.images, tmp], ignore_index=True)
 
     def __len__(self):
         return len(self.images)
@@ -56,11 +60,11 @@ class DataModule(lg.LightningDataModule):
         ])
         self.root = Path(root)
         self.train_data = [
-            #str(self.root  / "assets" / "preprocessed" / "Train_coco.ndjson"),
+            str(self.root  / "assets" / "preprocessed" / "Train_coco.ndjson"),
             str(self.root / "assets" / "preprocessed" / "Train_nus-wide.ndjson"),
         ]
         self.test_data = [
-            #str(self.root / "assets" / "preprocessed" / "Test_coco.ndjson"),
+            str(self.root / "assets" / "preprocessed" / "Test_coco.ndjson"),
             str(self.root / "assets" / "preprocessed" / "Test_nus-wide.ndjson"),
         ]
     
@@ -90,13 +94,13 @@ class DataModule(lg.LightningDataModule):
             self.predict = self.test
             
     def train_dataloader(self):
-        return DataLoader(self.train, batch_size=self.batch_size, pin_memory=True, num_workers=6)
+        return DataLoader(self.train, batch_size=self.batch_size, num_workers=6)
 
     def val_dataloader(self):
-        return DataLoader(self.val, batch_size=self.batch_size, pin_memory=True, num_workers=6)
+        return DataLoader(self.val, batch_size=self.batch_size, num_workers=6)
 
     def test_dataloader(self):
-        return DataLoader(self.test, batch_size=self.batch_size, pin_memory=True, num_workers=6)
+        return DataLoader(self.test, batch_size=self.batch_size, num_workers=6)
 
     def predict_dataloader(self):
-        return DataLoader(self.predict, batch_size=self.batch_size, pin_memory=True, num_workers=6)
+        return DataLoader(self.predict, batch_size=self.batch_size, num_workers=6)

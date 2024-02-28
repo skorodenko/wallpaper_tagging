@@ -21,7 +21,7 @@ trainer = lg.Trainer(
     ],
 )
 model = MSCNN(
-    lr = 0.005,
+    lr = 0.001,
     weight_decay=0.0001,
 )
 trainer.fit(model, datamodule=data) 
