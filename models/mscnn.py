@@ -56,7 +56,7 @@ class FusionBlock(nn.Module):
 
 class MSCNN(lg.LightningModule):
     
-    def __init__(self, lr = 0.001, weight_decay = 0.00001):
+    def __init__(self, lr: float = 0.001, weight_decay: float = 0.00001):
         super().__init__()
         self.save_hyperparameters()
         self.conv1 = resnet.conv1
