@@ -10,7 +10,7 @@ lg.seed_everything(42)
 TRAINED_MODELS = Path("./assets/trained_models")
 
 
-data = DataModule(batch_size = 2, prefetch_factor = 10)
+data = DataModule(batch_size = 16, prefetch_factor = 10, num_workers = 7)
 trainer = lg.Trainer(
     devices=1,
     max_epochs=40,
@@ -21,7 +21,7 @@ trainer = lg.Trainer(
     ],
 )
 model = MLP(
-    lr = 0.0005,
+    lr = 0.001,
     weight_decay=0.0001,
 )
 trainer.fit(model, datamodule=data) 
