@@ -13,7 +13,6 @@ lightning = "^2.2.0.post0"
 torchtext = "^0.17.0"
 numpy = "^1.26.4"
 polars = "^0.20.10"
-tensorboard = "^2.16.2"
 pandas = "^2.2.1"
 
 
