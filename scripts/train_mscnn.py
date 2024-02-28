@@ -10,12 +10,12 @@ lg.seed_everything(42)
 TRAINED_MODELS = Path("./assets/trained_models")
 
 
-data = DataModule(batch_size = 6)
+data = DataModule(batch_size = 4, prefetch_factor = 20)
 trainer = lg.Trainer(
     devices=1,
     max_epochs=40,
     accelerator="gpu",
-    default_root_dir = TRAINED_MODELS / "mscnn.ckpt",
+    default_root_dir = TRAINED_MODELS / "mscnn.train",
     callbacks=[
         EarlyStopping(monitor="val_loss", mode="min"),
     ],

@@ -23,7 +23,7 @@ class MLP(lg.LightningModule):
         return x
 
     def configure_optimizers(self):
-        return torch.optim.Adam(
+        return torch.optim.AdamW(
             self.parameters(),
             lr = self.hparams.lr,
             weight_decay = self.hparams.weight_decay,
@@ -35,7 +35,7 @@ class MLP(lg.LightningModule):
         loss = self.loss_module(pred, labels)
         #acc = (pred.argmax(dim=-1) == labels).float().mean()
         #self.log("train_acc", acc, on_step=False, on_epoch=True)
-        self.log("train_loss", loss, on_step=True)
+        self.log("train_loss", loss, on_step=True, prog_bar=True)
         return loss
     
     def validation_step(self, batch, batch_idx):

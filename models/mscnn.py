@@ -70,7 +70,7 @@ class MSCNN(lg.LightningModule):
         self.loss_module = nn.CrossEntropyLoss()
     
     def configure_optimizers(self):
-        return torch.optim.Adam(
+        return torch.optim.AdamW(
             self.parameters(),
             lr = self.hparams.lr,
             weight_decay = self.hparams.weight_decay,
