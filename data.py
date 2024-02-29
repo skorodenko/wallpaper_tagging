@@ -10,8 +10,9 @@ from torch.utils.data import Dataset, DataLoader, random_split
 
 class CustomDataset(Dataset):
     
-    def __init__(self, files: list[str] | str, root: str, transform=None, target_transform=None):
+    def __init__(self, files: list[str] | str, root: str, load_images: bool = True, transform=None, target_transform=None):
         self.root = root
+        self.load_images = load_images
         self.transform = transform
         self.target_transform = target_transform
         self.images = pd.read_json(files[0], lines=True)
@@ -30,10 +31,13 @@ class CustomDataset(Dataset):
             row["image_root"],
             row["file_name"],
         )
-        image = read_image(str(image_path))
+        if self.load_images:
+            image = read_image(str(image_path))
+        else:
+            image = 0
         labels = row["labels"]
         tags = row["tags"]
-        if self.transform:
+        if self.load_images and self.transform:
             image = self.transform(image)
         if self.target_transform:
             labels = self.target_transform(labels)
@@ -43,8 +47,9 @@ class CustomDataset(Dataset):
 
 class DataModule(lg.LightningDataModule):
     
-    def __init__(self, root: str = "", batch_size: int = 32, prefetch_factor: int = None, num_workers: int = 0):
+    def __init__(self, root: str = "", load_images: bool = True, batch_size: int = 32, prefetch_factor: int = None, num_workers: int = 0):
         super().__init__()
+        self.load_images = load_images
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.prefetch_factor = prefetch_factor
@@ -52,7 +57,7 @@ class DataModule(lg.LightningDataModule):
         self.transform = transforms.Compose([
             transforms.RandomResizedCrop(224),
             transforms.RandomHorizontalFlip(),
-            transforms.ToImage(),
+            #transforms.ToImage(),
             transforms.ToDtype(torch.float32, scale=True),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])
@@ -75,12 +80,13 @@ class DataModule(lg.LightningDataModule):
             dataset = CustomDataset(
                 self.train_data,
                 root = self.root,
+                load_images = self.load_images,
                 transform = self.transform,
                 target_transform = self.target_transform,
             )
             self.train, self.val = random_split(
                 dataset=dataset, 
-                lengths=[0.7, 0.3], 
+                lengths=[0.95, 0.05], 
                 generator=torch.Generator().manual_seed(42)
             )
 
@@ -88,6 +94,7 @@ class DataModule(lg.LightningDataModule):
             self.test = CustomDataset(
                 self.test_data,
                 root = self.root,
+                load_images = self.load_images,
                 transform = self.transform,
                 target_transform = self.target_transform,
             )

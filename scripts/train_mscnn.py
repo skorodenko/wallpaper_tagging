@@ -10,7 +10,7 @@ lg.seed_everything(42)
 TRAINED_MODELS = Path("./assets/trained_models")
 
 
-data = DataModule(batch_size = 4, prefetch_factor = 20)
+data = DataModule(batch_size = 1, prefetch_factor = 4)
 trainer = lg.Trainer(
     devices=1,
     max_epochs=40,
