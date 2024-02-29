@@ -21,7 +21,7 @@ trainer = lg.Trainer(
     ],
 )
 model = MLP(
-    lr = 0.0005,
+    lr = 0.00075,
     weight_decay=0.0001,
 )
 trainer.fit(model, datamodule=data) 

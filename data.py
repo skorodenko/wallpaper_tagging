@@ -57,7 +57,7 @@ class DataModule(lg.LightningDataModule):
         self.transform = transforms.Compose([
             transforms.RandomResizedCrop(224),
             transforms.RandomHorizontalFlip(),
-            #transforms.ToImage(),
+            transforms.ToImage(),
             transforms.ToDtype(torch.float32, scale=True),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])
@@ -86,7 +86,7 @@ class DataModule(lg.LightningDataModule):
             )
             self.train, self.val = random_split(
                 dataset=dataset, 
-                lengths=[0.95, 0.05], 
+                lengths=[0.8, 0.2], 
                 generator=torch.Generator().manual_seed(42)
             )
 
