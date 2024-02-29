@@ -1,13 +1,16 @@
 import glob
 import polars as pl
 import polars.selectors as cs
+from tqdm import tqdm
+from pathlib import Path
+from torchvision.io import read_image
 
 
 IMAGE_ROOT = "./assets/nus-wide/images"
-OUTPUT = "./assets/preprocessed/Train_nus-wide.ndjson"
-IMAGES = "./assets/nus-wide/TrainImagelist.txt"
-TAGS_81 = "./assets/nus-wide/Train_Tags81.txt"
-TAGS_1K = "./assets/nus-wide/Train_Tags1k.dat"
+OUTPUT = "./assets/preprocessed/Test_nus-wide.ndjson"
+IMAGES = "./assets/nus-wide/TestImagelist.txt"
+TAGS_81 = "./assets/nus-wide/Test_Tags81.txt"
+TAGS_1K = "./assets/nus-wide/Test_Tags1k.dat"
 
 
 IMAGE_FILES = glob.glob(r"*.*", root_dir=IMAGE_ROOT)
@@ -71,6 +74,21 @@ print(images.collect())
 
 # Checks image existance
 images = images.filter(pl.col("file_name").is_in(IMAGE_FILES))
+
+# Checks if images are not corrupted (by trying to read)
+dflen = images.select(pl.count("file_name")).collect().item()
+print("Starting check for image corruption")
+dellist = []
+for row in tqdm(
+    images.select([pl.col("image_root"), pl.col("file_name")]).collect().to_dicts()
+):
+    img = Path(row["image_root"], row["file_name"])
+    try:
+        read_image(str(img))
+    except RuntimeError:
+        dellist.append(row["file_name"])
+
+images = images.filter(~pl.col("file_name").is_in(dellist))
 
 # After file checkup
 print(images.collect())
