@@ -1,21 +1,21 @@
-import polars as pl
+import torch
+import lightning as lg
+from pathlib import Path
+from data import DataModule
+from models.compose import Model
 
-coco = pl.scan_ndjson("./assets/preprocessed/Train_coco.ndjson")
-nuswide = pl.scan_ndjson("./assets/preprocessed/Train_nus-wide.ndjson")
 
-#coco = coco.with_columns(
-#    ext = pl.col("file_name").str.extract(r"\.(.*)$"),
-#    iid = pl.col("file_name").str.extract(r"[^\..]+$")
-#)
-#nuswide = nuswide.with_columns(
-#    ext = pl.col("file_name").str.extract(r"\.(.*)"),
-#    iid = pl.col("file_name").str.extract(r"[^.\.]+$")
-#)
-#print(coco.collect()["ext"].unique())
-#print(coco.collect()["iid"].unique())
-#print(nuswide.collect()["ext"].unique().sort())
-#print(nuswide.collect()["iid"].unique().sort())
-print(coco.collect())
-print(coco.filter(pl.col("file_name").str.contains(r"\.")).collect())
-print(nuswide.collect())
-print(nuswide.filter(pl.col("file_name").str.contains(r"\.")).collect())
+TRAINED_MODELS = Path("./assets/trained_models")
+ROOT_DIR = TRAINED_MODELS / "lp.train"
+
+
+data = DataModule()
+trainer = lg.Trainer(
+    devices=1,
+    accelerator="gpu",
+    default_root_dir = ROOT_DIR,
+)
+
+with torch.no_grad():
+    model = Model()
+    trainer.test(model, datamodule=data) 

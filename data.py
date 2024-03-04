@@ -1,8 +1,8 @@
 import torch
 import pandas as pd
 import lightning as lg
-from models.utils import TagEncoder
 from pathlib import Path
+from models.utils import TagEncoder
 from torchvision.io import read_image
 from torchvision.transforms import v2 as transforms
 from torch.utils.data import Dataset, DataLoader, random_split
@@ -55,11 +55,10 @@ class DataModule(lg.LightningDataModule):
         self.prefetch_factor = prefetch_factor
         self.prepare_data_per_node = False
         self.transform = transforms.Compose([
-            transforms.RandomResizedCrop(224),
-            transforms.RandomHorizontalFlip(),
-            transforms.ToImage(),
-            transforms.ToDtype(torch.float32, scale=True),
-            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+            transforms.Resize(232),
+            transforms.CenterCrop(224),
+            transforms.ToDtype(torch.float),
+            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
         ])
         self.target_transform = transforms.Compose([
             TagEncoder(),
@@ -67,12 +66,12 @@ class DataModule(lg.LightningDataModule):
         ])
         self.root = Path(root)
         self.train_data = [
-            str(self.root  / "assets" / "preprocessed" / "Train_coco.ndjson"),
             str(self.root / "assets" / "preprocessed" / "Train_nus-wide.ndjson"),
+            str(self.root  / "assets" / "preprocessed" / "Train_coco.ndjson"),
         ]
         self.test_data = [
-            str(self.root / "assets" / "preprocessed" / "Test_coco.ndjson"),
             str(self.root / "assets" / "preprocessed" / "Test_nus-wide.ndjson"),
+            str(self.root / "assets" / "preprocessed" / "Test_coco.ndjson"),
         ]
     
     def setup(self, stage: str):
@@ -84,10 +83,11 @@ class DataModule(lg.LightningDataModule):
                 transform = self.transform,
                 target_transform = self.target_transform,
             )
+            generator_val = torch.Generator().manual_seed(44)
             self.train, self.val = random_split(
                 dataset=dataset, 
                 lengths=[0.8, 0.2], 
-                generator=torch.Generator().manual_seed(42)
+                generator=generator_val,
             )
 
         if stage == "test":
@@ -104,7 +104,7 @@ class DataModule(lg.LightningDataModule):
             
     def train_dataloader(self):
         return DataLoader(
-            self.train, batch_size=self.batch_size, 
+            self.train, batch_size=self.batch_size, shuffle=True, 
             num_workers=self.num_workers, pin_memory=True, 
             prefetch_factor=self.prefetch_factor
         )
@@ -118,7 +118,7 @@ class DataModule(lg.LightningDataModule):
 
     def test_dataloader(self):
         return DataLoader(
-            self.test, batch_size=self.batch_size, 
+            self.test, batch_size=self.batch_size,
             num_workers=self.num_workers, pin_memory=True,
             prefetch_factor=self.prefetch_factor
         )

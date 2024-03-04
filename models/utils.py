@@ -46,3 +46,14 @@ class TagEncoder:
             num_classes=self.voclen
         ).amax(dim=0)
         return val
+    
+    def decode(self, cls: Tensor, clen: Tensor) -> list[str]:
+        sort_cls = cls.argsort(dim=1, descending=True)
+        out = []
+        for _class, _len in zip(sort_cls, clen):
+            print(self.voc.lookup_tokens(_class[:10].tolist()))
+            v = _class[:_len]
+            d = self.voc.lookup_tokens(v.tolist())
+            out.append(d)
+        
+        return out
