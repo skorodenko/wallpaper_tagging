@@ -1,6 +1,6 @@
 import torch
 import lightning as lg
-from .mscnn import MSCNN
+from .vcnn import MSCNN
 from .mlp import MLP
 from torchvision.transforms import v2 as transforms
 
@@ -8,7 +8,7 @@ from torchvision.transforms import v2 as transforms
 labels_f32 = transforms.Compose([
     transforms.Lambda(lambda x: x.sum(axis=1)),
     transforms.Lambda(lambda x: x.unsqueeze(1)),
-    transforms.Lambda(lambda x: x.divide(1063.0)),
+    transforms.Lambda(lambda x: x.divide(1000.0)),
 ])
 
 
@@ -22,7 +22,7 @@ class LQP(lg.LightningModule):
         self.mlp = MLP.load_from_checkpoint("./assets/trained_models/mlp.train/mlp.ckpt")
         self.mlp.freeze()
         self.fc = torch.nn.Sequential(
-            torch.nn.Linear(1063 * 2, 512),
+            torch.nn.Linear(1000 * 2, 512),
             torch.nn.Dropout(),
             torch.nn.Linear(512, 256),
             torch.nn.Dropout(),

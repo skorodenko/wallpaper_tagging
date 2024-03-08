@@ -17,6 +17,8 @@ pandas = "^2.2.1"
 tqdm = "^4.66.2"
 pillow = "^10.2.0"
 torcheval = "^0.0.7"
+lightning-flash = "^0.8.2"
+deepspeed = "^0.13.5"
 
 
 [build-system]

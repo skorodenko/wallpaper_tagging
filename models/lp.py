@@ -1,6 +1,6 @@
 import torch
 import lightning as lg
-from .mscnn import MSCNN
+from .vcnn import MSCNN
 from .mlp import MLP
 
 
@@ -14,7 +14,7 @@ class LP(lg.LightningModule):
         self.mlp = MLP.load_from_checkpoint("./assets/trained_models/mlp.train/mlp.ckpt")
         self.mlp.freeze()
         self.fc = torch.nn.Sequential(
-            torch.nn.Linear(1063 * 2, 1063),
+            torch.nn.Linear(1000 * 2, 1000),
         )
         self.activation = torch.nn.Softmax()
         self.loss_module = torch.nn.BCEWithLogitsLoss()

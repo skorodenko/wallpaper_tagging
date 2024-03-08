@@ -1,7 +1,7 @@
 import torch
 import lightning as lg
 from .utils import TagEncoder
-from .mscnn import MSCNN
+from .vcnn import MSCNN
 from .mlp import MLP
 from .lp import LP
 from .lqp import LQP
@@ -11,7 +11,7 @@ from torchvision.transforms import v2 as transforms
 labels_f32 = transforms.Compose([
     transforms.Lambda(lambda x: x.sum(axis=1)),
     transforms.Lambda(lambda x: x.unsqueeze(1)),
-    transforms.Lambda(lambda x: x.divide(1063.0)),
+    transforms.Lambda(lambda x: x.divide(1000.0)),
 ])
 
 
@@ -38,7 +38,7 @@ class Model(lg.LightningModule):
         f = torch.cat((f_vis, f_text), 1)
         labels = self.lp.predict(f)
         number = self.lqp.predict(f)
-        number = number.mul(1063).round().to(torch.int64)
+        number = number.mul(1000).round().to(torch.int64)
         decoded = tag_encoder.decode(labels, number)
         return decoded
 

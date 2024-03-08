@@ -9,14 +9,14 @@ class MLP(lg.LightningModule):
         super().__init__()
         self.save_hyperparameters()
         self.fc1 = torch.nn.Sequential(
-            torch.nn.Linear(1063, 2048),
+            torch.nn.Linear(1000, 2048),
             torch.nn.ReLU(),
         )
         self.fc2 = torch.nn.Sequential(
-            torch.nn.Linear(2048, 1063),
+            torch.nn.Linear(2048, 1000),
         )
         self.activation = torch.nn.ReLU()  
-        self.loss_module = torch.nn.BCEWithLogitsLoss()
+        self.loss_module = torch.nn.BCEWithLogitsLoss(reduction="sum")
         
     def predict(self, x: Tensor):
         x = self(x)

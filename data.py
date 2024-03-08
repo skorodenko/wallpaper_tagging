@@ -55,9 +55,15 @@ class DataModule(lg.LightningDataModule):
         self.prefetch_factor = prefetch_factor
         self.prepare_data_per_node = False
         self.transform = transforms.Compose([
+            transforms.RandomResizedCrop(224),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToDtype(torch.float32),
+            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+        ])
+        self.val_transform = transforms.Compose([
             transforms.Resize(232),
-            transforms.CenterCrop(224),
-            transforms.ToDtype(torch.float),
+            transforms.CenterCrop(224),  
+            transforms.ToDtype(torch.float32),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
         ])
         self.target_transform = transforms.Compose([
@@ -89,6 +95,7 @@ class DataModule(lg.LightningDataModule):
                 lengths=[0.8, 0.2], 
                 generator=generator_val,
             )
+            self.val.dataset.transform = self.val_transform
 
         if stage == "test":
             self.test = CustomDataset(
@@ -104,7 +111,7 @@ class DataModule(lg.LightningDataModule):
             
     def train_dataloader(self):
         return DataLoader(
-            self.train, batch_size=self.batch_size, shuffle=True, 
+            self.train, batch_size=self.batch_size, shuffle=True,
             num_workers=self.num_workers, pin_memory=True, 
             prefetch_factor=self.prefetch_factor
         )

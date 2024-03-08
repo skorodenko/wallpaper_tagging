@@ -11,7 +11,7 @@ TRAINED_MODELS = Path("./assets/trained_models")
 ROOT_DIR = TRAINED_MODELS / "mlp.train"
 
 
-data = DataModule(load_images = False, batch_size = 64, prefetch_factor = 32, num_workers = 7)
+data = DataModule(load_images = False, batch_size = 16, prefetch_factor = 4, num_workers = 7)
 trainer = lg.Trainer(
     devices=1,
     max_epochs=100,
@@ -34,7 +34,7 @@ trainer = lg.Trainer(
     ],
 )
 model = MLP(
-    lr = 0.01,
+    lr = 0.0001,
     weight_decay=1e-4,
     momentum = 0.9,
 )
