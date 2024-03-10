@@ -6,25 +6,6 @@ from torch import Tensor
 from models.utils import Metrics
 
 
-def conv3x3(in_planes: int, out_planes: int, stride: int = 1, groups: int = 1, dilation: int = 1) -> nn.Conv2d:
-    """3x3 convolution with padding"""
-    return nn.Conv2d(
-        in_planes,
-        out_planes,
-        kernel_size=3,
-        stride=stride,
-        padding=dilation,
-        groups=groups,
-        bias=False,
-        dilation=dilation,
-    )
-
-
-def conv1x1(in_planes: int, out_planes: int, stride: int = 1) -> nn.Conv2d:
-    """1x1 convolution"""
-    return nn.Conv2d(in_planes, out_planes, kernel_size=1, stride=stride, bias=False)
-
-
 resnet = torchvision.models.resnet101(
     weights=torchvision.models.ResNet101_Weights.IMAGENET1K_V2
 )
@@ -35,7 +16,10 @@ class VCNN(lg.LightningModule):
     def __init__(self, lr: float = ..., weight_decay: float = ...):
         super().__init__()
         self.save_hyperparameters()
-        self.conv1 = resnet.conv1
+        self.conv0 = resnet.conv1
+        self.bn0 = resnet.bn1
+        self.relu0 = resnet.relu
+        self.maxpool0 = resnet.maxpool
         self.layer1 = resnet.layer1
         self.layer2 = resnet.layer2
         self.layer3 = resnet.layer3
@@ -43,7 +27,7 @@ class VCNN(lg.LightningModule):
         self.avgpool = resnet.avgpool
         self.head = nn.Linear(2048, 1000)
         self.loss_module = nn.BCEWithLogitsLoss(
-            pos_weight = torch.ones([1000]),
+            reduction = "sum",
         )
         self.activation = nn.Sigmoid()
         self.metrics = Metrics(1000)
@@ -55,12 +39,10 @@ class VCNN(lg.LightningModule):
             weight_decay = self.hparams.weight_decay,
             amsgrad = True,
         )
-        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+        scheduler = torch.optim.lr_scheduler.MultiStepLR(
             optimizer,
-            mode = "min",
-            factor = 0.5,
-            patience = 1,
-            threshold = 1e-3,
+            milestones = [5,10],
+            gamma = 0.1,
         )
         return [optimizer], [scheduler]
         
@@ -71,7 +53,11 @@ class VCNN(lg.LightningModule):
     
     def forward(self, x: Tensor):
         # Resnet
-        x = self.conv1(x)
+        x = self.conv0(x)
+        x = self.bn0(x)
+        x = self.relu0(x)
+        x = self.maxpool0(x)
+        
         x = self.layer1(x)
         x = self.layer2(x)
         x = self.layer3(x)

@@ -105,8 +105,8 @@ class TagEncoder:
     
     def __init__(self):
         FILE = "./assets/preprocessed/Tags1k.ndjson"
-        tags = pl.read_ndjson(FILE)
-        tags = set(tags["name"].to_list())
+        self._tags = pl.read_ndjson(FILE)
+        tags = set(self._tags["name"].to_list())
         
         tokenizer = get_tokenizer("basic_english")
         self.voc = build_vocab_from_iterator(
@@ -124,6 +124,19 @@ class TagEncoder:
             num_classes=self.voclen
         ).amax(dim=0)
         return val
+
+    def cls_weights(self) -> Tensor:
+        total_samples = self._tags.select(pl.sum("count")).item()
+        itos = self.voc.get_itos()
+        df = self._tags
+        res = []
+        for name in itos:
+            val = df.filter(pl.col("name") == name).select(pl.sum("count")).item()
+            if val == 0:
+                res.append(0)
+            else:
+                res.append(total_samples / (val * self.voclen))
+        return torch.tensor(res)
     
     def decode(self, cls: Tensor, clen: Tensor) -> list[str]:
         sort_cls = cls.argsort(dim=1, descending=True)
