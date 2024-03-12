@@ -89,7 +89,7 @@ class DataModule(lg.LightningDataModule):
                 transform = self.transform,
                 target_transform = self.target_transform,
             )
-            generator_val = torch.Generator().manual_seed(44)
+            generator_val = torch.Generator().manual_seed(0)
             self.train, self.val = random_split(
                 dataset=dataset, 
                 lengths=[0.8, 0.2], 
