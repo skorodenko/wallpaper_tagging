@@ -116,7 +116,11 @@ class TagEncoder:
         self.voclen = len(self.voc)
         
     def __call__(self, sample: Series) -> Tensor:
-        ftags_1k = [t for t in sample if t in self.tags]
+        ftags_1k = []
+        for t in sample:
+            for w in t.split(" "):
+                if w in self.tags:
+                    ftags_1k.append(w)
         if ftags_1k == []:
             return torch.zeros(self.voclen)
         val = F.one_hot(

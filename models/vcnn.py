@@ -33,18 +33,21 @@ class VCNN(lg.LightningModule):
         self.metrics = Metrics(1000)
     
     def configure_optimizers(self):
-        optimizer = torch.optim.AdamW(
+        optimizer = torch.optim.SGD(
             self.parameters(),
             lr = self.hparams.lr,
-            weight_decay = self.hparams.weight_decay,
-            amsgrad = True,
+            momentum = 0.9,
         )
-        scheduler = torch.optim.lr_scheduler.MultiStepLR(
+        scheduler = torch.optim.lr_scheduler.OneCycleLR(
             optimizer,
-            milestones = [5,10],
-            gamma = 0.1,
+            max_lr = 1e-5 / 4,
+            pct_start = 0.3,
+            div_factor = 1e+1,
+            final_div_factor = 1e+2,
+            epochs = self.trainer.max_epochs,
+            steps_per_epoch = 3938,
         )
-        return [optimizer], [scheduler]
+        return [optimizer], [{"scheduler": scheduler, "interval": "step"}]
         
     def predict(self, x: Tensor):
         x = self.forward(x)
@@ -81,7 +84,7 @@ class VCNN(lg.LightningModule):
         (image, _, labels) = batch
         pred = self.forward(image)
         loss = self.loss_module(pred, labels)
-        pred = (self.activation(pred) > 0.5).to(torch.int64)
+        pred = (self.activation(pred) > 0.3).to(torch.int64)
         labels = labels.to(torch.int64)
         self.metrics.update(pred, labels)
         self.log("val_loss", loss, prog_bar=True)
@@ -96,7 +99,7 @@ class VCNN(lg.LightningModule):
     def test_step(self, batch, batch_idx):
         (image, _, labels) = batch
         pred = self.forward(image)
-        pred = (self.activation(pred) > 0.5).to(torch.int64)
+        pred = (self.activation(pred) > 0.3).to(torch.int64)
         labels = labels.to(torch.int64)
         self.metrics.update(pred, labels)
     

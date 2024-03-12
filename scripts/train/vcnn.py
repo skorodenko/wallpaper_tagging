@@ -19,11 +19,11 @@ trainer = lg.Trainer(
     max_epochs = 20,
     accelerator = "gpu",
     default_root_dir = ROOT_DIR,
-    logger = CSVLogger(ROOT_DIR, "logs", version=0),
+    logger = CSVLogger(ROOT_DIR, "logs", version=1),
     limit_train_batches = 0.1,
-    limit_val_batches = 0.5,
+    limit_val_batches = 0.25,
     callbacks = [
-        LearningRateMonitor(logging_interval = "epoch"),
+        LearningRateMonitor(logging_interval = "step"),
         ModelCheckpoint(
             monitor="val_loss",
             save_top_k=4,
@@ -34,8 +34,8 @@ trainer = lg.Trainer(
 )
 
 model = VCNN(
-    lr = 0.001 / 4,
-    weight_decay = 0.01,
+    lr = 1e-5 / 4,
+    weight_decay = 2e-5,
 )
 
 freeze_layers = [

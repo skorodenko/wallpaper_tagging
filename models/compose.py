@@ -22,14 +22,10 @@ class Model(lg.LightningModule):
     
     def __init__(self):
         super().__init__()
-        self.mscnn = MSCNN.load_from_checkpoint("./assets/trained_models/mscnn.train/mscnn.ckpt")
-        self.mscnn.freeze()
-        self.mlp = MLP.load_from_checkpoint("./assets/trained_models/mlp.train/mlp.ckpt")
-        self.mlp.freeze()
-        self.lp = LP.load_from_checkpoint("./assets/trained_models/lp.train/lp.ckpt")
-        self.lp.freeze()
-        self.lqp = LQP.load_from_checkpoint("./assets/trained_models/lqp.train/lqp.ckpt")
-        self.lqp.freeze()
+        self.mscnn = MSCNN()
+        self.mlp = MLP()
+        self.lp = LP()
+        self.lqp = LQP()
         
     def forward(self, x):
         image, tags = x
