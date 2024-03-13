@@ -2,9 +2,7 @@ import polars as pl
 
 
 FILES = [
-    "/home/rinkuro/Sandbox/wallpaper_app/wallpaper_tagging/assets/preprocessed/Test_coco.ndjson",
     "/home/rinkuro/Sandbox/wallpaper_app/wallpaper_tagging/assets/preprocessed/Train_coco.ndjson",
-    "/home/rinkuro/Sandbox/wallpaper_app/wallpaper_tagging/assets/preprocessed/Test_nus-wide.ndjson",
     "/home/rinkuro/Sandbox/wallpaper_app/wallpaper_tagging/assets/preprocessed/Train_nus-wide.ndjson",
 ]
 

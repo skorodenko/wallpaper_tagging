@@ -16,40 +16,28 @@ class VCNN(lg.LightningModule):
     def __init__(self, lr: float = ..., weight_decay: float = ...):
         super().__init__()
         self.save_hyperparameters()
-        self.conv0 = resnet.conv1
-        self.bn0 = resnet.bn1
-        self.relu0 = resnet.relu
-        self.maxpool0 = resnet.maxpool
-        self.layer1 = resnet.layer1
-        self.layer2 = resnet.layer2
-        self.layer3 = resnet.layer3
-        self.layer4 = resnet.layer4
-        self.avgpool = resnet.avgpool
-        self.head = nn.Linear(2048, 1000)
-        self._loss_module = nn.BCEWithLogitsLoss(
-            reduction = "none",
+        self.backbone = resnet
+        self.backbone.fc = nn.Sequential(
+            nn.Linear(resnet.fc.in_features, 1000),
         )
+        self.loss_module = nn.BCEWithLogitsLoss()
         self.activation = nn.Sigmoid()
         self.metrics = Metrics(1000)
     
-    def loss_module(self, pred: Tensor, target: Tensor):
-        loss = self._loss_module(pred, target)
-        return loss.sum(dim=1).mean()
-    
     def configure_optimizers(self):
-        optimizer = torch.optim.SGD(
+        optimizer = torch.optim.AdamW(
             self.parameters(),
             lr = self.hparams.lr,
-            momentum = 0.9,
+            amsgrad = True,
         )
         scheduler = torch.optim.lr_scheduler.OneCycleLR(
             optimizer,
             max_lr = self.hparams.lr,
-            pct_start = 0.2,
-            div_factor = 2,
-            final_div_factor = 10,
+            pct_start = 0.3,
+            #div_factor = 1e-1,
+            #final_div_factor = 1e-2,
             epochs = self.trainer.max_epochs,
-            steps_per_epoch = 1969,
+            steps_per_epoch = 1231,
         )
         return [optimizer], [{"scheduler": scheduler, "interval": "step"}]
         
@@ -59,22 +47,7 @@ class VCNN(lg.LightningModule):
         return x
     
     def forward(self, x: Tensor):
-        # Resnet
-        x = self.conv0(x)
-        x = self.bn0(x)
-        x = self.relu0(x)
-        x = self.maxpool0(x)
-        
-        x = self.layer1(x)
-        x = self.layer2(x)
-        x = self.layer3(x)
-        x = self.layer4(x)
-        x = self.avgpool(x)
-        
-        # Output layer
-        x = torch.flatten(x, 1)
-        x = self.head(x)
-        
+        x = self.backbone(x)
         return x
     
     def training_step(self, batch, batch_idx):
