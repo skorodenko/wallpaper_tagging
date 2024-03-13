@@ -12,14 +12,14 @@ ROOT_DIR = TRAINED_MODELS / "vcnn.train"
 CKPT_PATH = TRAINED_MODELS / "vcnn.train" / "vcnn.ckpt"
 
 
-data = DataModule(batch_size = 4, prefetch_factor = 8, num_workers = 6)
+data = DataModule(batch_size = 8, prefetch_factor = 8, num_workers = 6)
 
 trainer = lg.Trainer(
     devices = 1,
-    max_epochs = 20,
+    max_epochs = 15,
     accelerator = "gpu",
     default_root_dir = ROOT_DIR,
-    logger = CSVLogger(ROOT_DIR, "logs", version=1),
+    logger = CSVLogger(ROOT_DIR, "logs", version=3),
     limit_train_batches = 0.1,
     limit_val_batches = 0.25,
     callbacks = [
@@ -28,23 +28,24 @@ trainer = lg.Trainer(
             monitor="val_loss",
             save_top_k=4,
             dirpath=ROOT_DIR / "checkpoints",
-            filename="{v_num}-{epoch}-{val_loss:.3f}-[{C_F1:.3f}, {I_F1:.3f}]",
+            filename="{v_num}-{epoch}-{val_loss:.3f}-[{H_F1:.3f}]",
         ),
     ],
 )
 
 model = VCNN(
-    lr = 1e-5 / 4,
-    weight_decay = 2e-5,
+    lr = 0.001,
+    weight_decay = 0.1,
 )
 
 freeze_layers = [
-    #model.conv0.parameters(),
-    #model.bn0.parameters(),
-    #model.layer1.parameters(),
-    #model.layer2.parameters(),
-    #model.layer3.parameters(),
+    model.conv0.parameters(),
+    model.bn0.parameters(),
+    model.layer1.parameters(),
+    model.layer2.parameters(),
+    model.layer3.parameters(),
     #model.layer4.parameters(),
+    #model.head.parameters(),
 ]
 
 for param in chain(*freeze_layers):

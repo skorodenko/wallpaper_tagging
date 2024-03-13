@@ -99,6 +99,13 @@ class Metrics:
         if ip + ir == 0:
             return 0
         return 2 * (ip * ir) / (ip + ir)
+    
+    def HF1(self):
+        cf1 = self.CF1()
+        if1 = self.IF1()
+        if cf1 + if1 == 0:
+            return 0
+        return 2 * (cf1 * if1) / (cf1 + if1)
 
 
 class TagEncoder:
@@ -129,16 +136,17 @@ class TagEncoder:
         ).amax(dim=0)
         return val
 
-    def cls_weights(self) -> Tensor:
-        total_samples = self._tags.select(pl.sum("count")).item()
+    def balance_weights(self) -> Tensor:
+        total_samples = 255425
         itos = self.voc.get_itos()
         df = self._tags
         res = []
         for name in itos:
             val = df.filter(pl.col("name") == name).select(pl.sum("count")).item()
             if val == 0:
-                res.append(0)
+                res.append(1)
             else:
+                #res.append(np.log(total_samples - val / val))
                 res.append(total_samples / (val * self.voclen))
         return torch.tensor(res)
     

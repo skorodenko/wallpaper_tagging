@@ -26,11 +26,15 @@ class VCNN(lg.LightningModule):
         self.layer4 = resnet.layer4
         self.avgpool = resnet.avgpool
         self.head = nn.Linear(2048, 1000)
-        self.loss_module = nn.BCEWithLogitsLoss(
-            reduction = "sum",
+        self._loss_module = nn.BCEWithLogitsLoss(
+            reduction = "none",
         )
         self.activation = nn.Sigmoid()
         self.metrics = Metrics(1000)
+    
+    def loss_module(self, pred: Tensor, target: Tensor):
+        loss = self._loss_module(pred, target)
+        return loss.sum(dim=1).mean()
     
     def configure_optimizers(self):
         optimizer = torch.optim.SGD(
@@ -40,12 +44,12 @@ class VCNN(lg.LightningModule):
         )
         scheduler = torch.optim.lr_scheduler.OneCycleLR(
             optimizer,
-            max_lr = 1e-5 / 4,
-            pct_start = 0.3,
-            div_factor = 1e+1,
-            final_div_factor = 1e+2,
+            max_lr = self.hparams.lr,
+            pct_start = 0.2,
+            div_factor = 2,
+            final_div_factor = 10,
             epochs = self.trainer.max_epochs,
-            steps_per_epoch = 3938,
+            steps_per_epoch = 1969,
         )
         return [optimizer], [{"scheduler": scheduler, "interval": "step"}]
         
@@ -84,28 +88,44 @@ class VCNN(lg.LightningModule):
         (image, _, labels) = batch
         pred = self.forward(image)
         loss = self.loss_module(pred, labels)
-        pred = (self.activation(pred) > 0.3).to(torch.int64)
+        pred = (self.activation(pred) > 0.5).to(torch.int64)
         labels = labels.to(torch.int64)
         self.metrics.update(pred, labels)
         self.log("val_loss", loss, prog_bar=True)
     
     def on_validation_epoch_end(self):
+        cp, cr = self.metrics.CP(), self.metrics.CR()
         cf1 = self.metrics.CF1()
+        ip, ir = self.metrics.IP(), self.metrics.IR()
         if1 = self.metrics.IF1()
-        self.log("C_F1", cf1, prog_bar=True)
-        self.log("I_F1", if1, prog_bar=True)
+        hf1 = self.metrics.HF1()
+        self.log("CP", cp)
+        self.log("CR", cr)
+        self.log("IP", ip)
+        self.log("IR", ir)
+        self.log("C_F1", cf1)
+        self.log("I_F1", if1)
+        self.log("H_F1", hf1, prog_bar=True)
         self.metrics.reset()
     
     def test_step(self, batch, batch_idx):
         (image, _, labels) = batch
         pred = self.forward(image)
-        pred = (self.activation(pred) > 0.3).to(torch.int64)
+        pred = (self.activation(pred) > 0.5).to(torch.int64)
         labels = labels.to(torch.int64)
         self.metrics.update(pred, labels)
     
     def on_test_epoch_end(self):
+        cp, cr = self.metrics.CP(), self.metrics.CR()
         cf1 = self.metrics.CF1()
+        ip, ir = self.metrics.IP(), self.metrics.IR()
         if1 = self.metrics.IF1()
-        self.log("C_F1", cf1, prog_bar=True)
-        self.log("I_F1", if1, prog_bar=True)
+        hf1 = self.metrics.HF1()
+        self.log("CP", cp)
+        self.log("CR", cr)
+        self.log("IP", ip)
+        self.log("IR", ir)
+        self.log("C_F1", cf1)
+        self.log("I_F1", if1)
+        self.log("H_F1", hf1, prog_bar=True)
         self.metrics.reset()
