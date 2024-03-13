@@ -81,31 +81,23 @@ class Metrics:
     def CF1(self):
         cp = self.CP()
         cr = self.CR()
-        if cp + cr == 0:
-            return 0
-        return 2 * (cp * cr) / (cp + cr)
+        return 2 * (cp * cr) / (cp + cr + 1e-12)
     
     def IP(self):
-        with np.errstate(divide="ignore", invalid="ignore"):
-            return np.nan_to_num(self.im_correct.sum() / self.im_pred.sum())
+        return self.im_correct.sum() / (self.im_pred.sum() + 1e-12)
     
     def IR(self):
-        with np.errstate(divide="ignore", invalid="ignore"):
-            return np.nan_to_num(self.im_correct.sum() / self.im_ground.sum())
+        return self.im_correct.sum() / (self.im_ground.sum() + 1e-12)
     
     def IF1(self):
         ip = self.IP()
         ir = self.IR()
-        if ip + ir == 0:
-            return 0
-        return 2 * (ip * ir) / (ip + ir)
+        return 2 * (ip * ir) / (ip + ir + 1e-12)
     
     def HF1(self):
         cf1 = self.CF1()
         if1 = self.IF1()
-        if cf1 + if1 == 0:
-            return 0
-        return 2 * (cf1 * if1) / (cf1 + if1)
+        return 2 * (cf1 * if1) / (cf1 + if1 + 1e-12)
 
 
 class TagEncoder:
@@ -136,20 +128,6 @@ class TagEncoder:
         ).amax(dim=0)
         return val
 
-    def balance_weights(self) -> Tensor:
-        total_samples = 255425
-        itos = self.voc.get_itos()
-        df = self._tags
-        res = []
-        for name in itos:
-            val = df.filter(pl.col("name") == name).select(pl.sum("count")).item()
-            if val == 0:
-                res.append(1)
-            else:
-                #res.append(np.log(total_samples - val / val))
-                res.append(total_samples / (val * self.voclen))
-        return torch.tensor(res)
-    
     def decode(self, cls: Tensor, clen: Tensor) -> list[str]:
         sort_cls = cls.argsort(dim=1, descending=True)
         out = []

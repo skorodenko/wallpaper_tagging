@@ -1,10 +1,9 @@
 import lightning as lg
-from data import DataModule
 from pathlib import Path
-from itertools import chain
+from data import DataModule
 from models.vcnn import VCNN
 from lightning.pytorch.loggers import CSVLogger
-from lightning.pytorch.callbacks import ModelCheckpoint, LearningRateMonitor
+from lightning.pytorch.callbacks import ModelCheckpoint, LearningRateMonitor, ModelSummary
 
 
 TRAINED_MODELS = Path("./assets/trained_models")
@@ -12,17 +11,18 @@ ROOT_DIR = TRAINED_MODELS / "vcnn.train"
 CKPT_PATH = TRAINED_MODELS / "vcnn.train" / "vcnn.ckpt"
 
 
-data = DataModule(batch_size = 8, prefetch_factor = 8, num_workers = 6)
+data = DataModule(batch_size = 32, prefetch_factor = 8, num_workers = 6)
 
 trainer = lg.Trainer(
     devices = 1,
-    max_epochs = 15,
+    max_epochs = 10,
     accelerator = "gpu",
     default_root_dir = ROOT_DIR,
-    logger = CSVLogger(ROOT_DIR, "logs", version=3),
-    limit_train_batches = 0.1,
-    limit_val_batches = 0.25,
+    logger = CSVLogger(ROOT_DIR, "logs", version=0),
+    limit_train_batches = 1,
+    limit_val_batches = 1,
     callbacks = [
+        ModelSummary(2),
         LearningRateMonitor(logging_interval = "step"),
         ModelCheckpoint(
             monitor="val_loss",
@@ -35,20 +35,14 @@ trainer = lg.Trainer(
 
 model = VCNN(
     lr = 0.001,
-    weight_decay = 0.1,
+    weight_decay = 0.9997,
 )
 
-freeze_layers = [
-    model.conv0.parameters(),
-    model.bn0.parameters(),
-    model.layer1.parameters(),
-    model.layer2.parameters(),
-    model.layer3.parameters(),
-    #model.layer4.parameters(),
-    #model.head.parameters(),
-]
+freeze_layers = ["conv1", "bn1", "layer1", "layer2", "layer3"]
 
-for param in chain(*freeze_layers):
-    param.requires_grad = False
+for name, param in model.backbone.named_parameters():
+    for freeze in freeze_layers:
+        if freeze in name:
+            param.requires_grad = False
 
 trainer.fit(model, datamodule=data)
