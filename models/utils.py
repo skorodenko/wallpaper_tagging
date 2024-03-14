@@ -105,6 +105,7 @@ class TagEncoder:
     def __init__(self):
         FILE = "./assets/preprocessed/Tags1k.ndjson"
         self._tags = pl.read_ndjson(FILE)
+        self._tags = self._tags.sort(pl.col("count"), descending=True).head(250)
         tags = set(self._tags["name"].to_list())
         
         tokenizer = get_tokenizer("basic_english")
@@ -115,15 +116,15 @@ class TagEncoder:
         self.voclen = len(self.voc)
         
     def __call__(self, sample: Series) -> Tensor:
-        ftags_1k = []
+        ftags = []
         for t in sample:
             for w in t.split(" "):
                 if w in self.tags:
-                    ftags_1k.append(w)
-        if ftags_1k == []:
+                    ftags.append(w)
+        if ftags == []:
             return torch.zeros(self.voclen)
         val = F.one_hot(
-            torch.tensor(self.voc.forward(ftags_1k)), 
+            torch.tensor(self.voc.forward(ftags)), 
             num_classes=self.voclen
         ).amax(dim=0)
         return val

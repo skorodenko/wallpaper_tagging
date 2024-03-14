@@ -5,7 +5,7 @@ from pathlib import Path
 from models.utils import TagEncoder
 from torchvision.io import read_image
 from torchvision.transforms import v2 as transforms
-from torch.utils.data import Dataset, DataLoader, random_split
+from torch.utils.data import Dataset, DataLoader
 
 
 class CustomDataset(Dataset):
@@ -76,18 +76,19 @@ class DataModule(lg.LightningDataModule):
     
     def setup(self, stage: str):
         if stage == "fit":
-            dataset = CustomDataset(
+            self.train = CustomDataset(
                 self.train_data,
                 root = self.root,
                 load_images = self.load_images,
                 transform = self.transform,
                 target_transform = self.target_transform,
             )
-            generator_val = torch.Generator().manual_seed(0)
-            self.train, self.val = random_split(
-                dataset=dataset, 
-                lengths=[0.8, 0.2], 
-                generator=generator_val,
+            self.val = CustomDataset(
+                self.test_data,
+                root = self.root,
+                load_images = self.load_images,
+                transform = self.transform,
+                target_transform = self.target_transform,
             )
 
         if stage == "test":
