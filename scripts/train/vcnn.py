@@ -11,7 +11,7 @@ ROOT_DIR = TRAINED_MODELS / "vcnn.train"
 CKPT_PATH = TRAINED_MODELS / "vcnn.train" / "vcnn.ckpt"
 
 
-data = DataModule(batch_size = 32, prefetch_factor = 8, num_workers = 6)
+data = DataModule(batch_size = 32, prefetch_factor = 16, num_workers = 6)
 
 trainer = lg.Trainer(
     devices = 1,
@@ -19,28 +19,31 @@ trainer = lg.Trainer(
     accelerator = "gpu",
     default_root_dir = ROOT_DIR,
     logger = CSVLogger(ROOT_DIR, "logs", version=0),
-    limit_train_batches = 1,
-    limit_val_batches = 1,
+    limit_train_batches = 1.0,
+    limit_val_batches = 1.0,
     callbacks = [
         ModelSummary(2),
         LearningRateMonitor(logging_interval = "step"),
         ModelCheckpoint(
-            monitor="val_loss",
-            save_top_k=4,
+            monitor="H_F1",
+            mode="max",
+            save_weights_only=True,
+            save_top_k=3,
             dirpath=ROOT_DIR / "checkpoints",
-            filename="{v_num}-{epoch}-{val_loss:.3f}-[{H_F1:.3f}]",
+            save_on_train_epoch_end=True,
+            filename="{H_F1:.3f}\:\:{v_num}\:\:{epoch}\:\:{val_loss:.3f}",
         ),
     ],
 )
 
 model = VCNN(
-    lr = 0.001,
+    lr = 0.1,
     weight_decay = 0.9997,
 )
 
-freeze_layers = ["conv1", "bn1", "layer1", "layer2", "layer3"]
+freeze_layers = ["feature_extractor"]
 
-for name, param in model.backbone.named_parameters():
+for name, param in model.named_parameters():
     for freeze in freeze_layers:
         if freeze in name:
             param.requires_grad = False
