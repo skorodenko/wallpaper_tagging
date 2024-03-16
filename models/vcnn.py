@@ -41,6 +41,7 @@ class VCNN(lg.LightningModule):
         optimizer = torch.optim.AdamW(
             self.parameters(),
             lr = self.hparams.lr,
+            weight_decay = self.hparams.weight_decay,
             amsgrad = True,
         )
         scheduler = torch.optim.lr_scheduler.OneCycleLR(
