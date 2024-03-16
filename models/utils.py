@@ -1,9 +1,10 @@
 import torch
 import numpy as np
 import polars as pl
+import torch.nn.functional as F
 from torch import Tensor
 from pandas import Series
-import torch.nn.functional as F
+from pathlib import Path
 from torchtext.data.utils import get_tokenizer
 from torchtext.vocab import build_vocab_from_iterator
 
@@ -100,14 +101,11 @@ class Metrics:
         return 2 * (cf1 * if1) / (cf1 + if1 + 1e-12)
 
 
-class TagEncoder:
+class TagTransform:
     
-    def __init__(self):
-        FILE = "./assets/preprocessed/Tags1k.ndjson"
-        self._tags = pl.read_ndjson(FILE)
-        self._tags = self._tags.sort(pl.col("count"), descending=True).head(250)
+    def __init__(self, file: str | Path):
+        self._tags = pl.read_ndjson(file)
         tags = set(self._tags["name"].to_list())
-        
         tokenizer = get_tokenizer("basic_english")
         self.voc = build_vocab_from_iterator(
             [tokenizer(tag) for tag in tags],
@@ -116,11 +114,7 @@ class TagEncoder:
         self.voclen = len(self.voc)
         
     def __call__(self, sample: Series) -> Tensor:
-        ftags = []
-        for t in sample:
-            for w in t.split(" "):
-                if w in self.tags:
-                    ftags.append(w)
+        ftags = [t for t in sample if t in self.tags]
         if ftags == []:
             return torch.zeros(self.voclen)
         val = F.one_hot(
@@ -130,12 +124,13 @@ class TagEncoder:
         return val
 
     def decode(self, cls: Tensor, clen: Tensor) -> list[str]:
-        sort_cls = cls.argsort(dim=1, descending=True)
-        out = []
-        for _class, _len in zip(sort_cls, clen):
-            print(self.voc.lookup_tokens(_class[:10].tolist()))
-            v = _class[:_len]
-            d = self.voc.lookup_tokens(v.tolist())
-            out.append(d)
-        
-        return out
+        ...
+#        sort_cls = cls.argsort(dim=1, descending=True)
+#        out = []
+#        for _class, _len in zip(sort_cls, clen):
+#            print(self.voc.lookup_tokens(_class[:10].tolist()))
+#            v = _class[:_len]
+#            d = self.voc.lookup_tokens(v.tolist())
+#            out.append(d)
+#        
+#        return out

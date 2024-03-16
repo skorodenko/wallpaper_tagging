@@ -2,15 +2,13 @@ import polars as pl
 
 
 FILES = [
-    "/home/rinkuro/Sandbox/wallpaper_app/wallpaper_tagging/assets/preprocessed/Train_coco.ndjson",
     "/home/rinkuro/Sandbox/wallpaper_app/wallpaper_tagging/assets/preprocessed/Train_nus-wide.ndjson",
 ]
 
-OUTPUT = "./assets/preprocessed/Tags1k.ndjson"
-
+OTAGS = "./assets/preprocessed/Tags_nus-wide.ndjson"
+OLABELS = "./assets/preprocessed/Labels_nus-wide.ndjson"
 
 df = pl.scan_ndjson(FILES)
-
 
 tags = df.select(pl.col("tags")).explode("tags")
 labels = df.select(pl.col("labels")).explode("labels")
@@ -21,10 +19,10 @@ labels = labels.select(pl.col("labels").value_counts())
 tags = tags.unnest("tags").rename({"tags": "name"})
 labels = labels.unnest("labels").rename({"labels": "name"})
 
-unified = pl.concat([tags, labels])
-unified = unified.group_by(pl.col("name")).agg(pl.col("count").sum())
-unified = unified.sort(pl.col("count"), descending=True)
-unified = unified.head(1000)
+tags = tags.sort(pl.col("count"), descending=True)
+labels = labels.sort(pl.col("count"), descending=True)
 
-print(unified.collect())
-unified.collect().write_ndjson(OUTPUT)
+print(tags.collect())
+print(labels.collect())
+tags.collect().write_ndjson(OTAGS)
+labels.collect().write_ndjson(OLABELS)

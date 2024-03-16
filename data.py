@@ -2,7 +2,7 @@ import torch
 import pandas as pd
 import lightning as lg
 from pathlib import Path
-from models.utils import TagEncoder
+from models.utils import TagTransform
 from torchvision.io import read_image
 from torchvision.transforms import v2 as transforms
 from torch.utils.data import Dataset, DataLoader
@@ -10,11 +10,12 @@ from torch.utils.data import Dataset, DataLoader
 
 class CustomDataset(Dataset):
     
-    def __init__(self, files: list[str] | str, root: str, load_images: bool = True, transform=None, target_transform=None):
+    def __init__(self, files: list[str] | str, root: str, load_images: bool = True, transform=None, tag_transform=None, label_transform=None):
         self.root = root
         self.load_images = load_images
         self.transform = transform
-        self.target_transform = target_transform
+        self.tag_transform = tag_transform
+        self.label_transform = label_transform
         self.images = pd.read_json(files[0], lines=True)
         if len(files) > 1:
             for f in files[1:]:
@@ -39,9 +40,10 @@ class CustomDataset(Dataset):
         tags = row["tags"]
         if self.load_images and self.transform:
             image = self.transform(image)
-        if self.target_transform:
-            labels = self.target_transform(labels)
-            tags = self.target_transform(tags)
+        if self.label_transform:
+            labels = self.label_transform(labels)
+        if self.tag_transform:
+            tags = self.tag_transform(tags)
         return image, tags, labels
 
 
@@ -60,18 +62,21 @@ class DataModule(lg.LightningDataModule):
             transforms.ToDtype(torch.float32, scale=True),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
         ])
-        self.target_transform = transforms.Compose([
-            TagEncoder(),
+        self.root = Path(root)
+        self.dataroot = self.root / "assets" / "preprocessed"
+        self.tag_transform = transforms.Compose([
+            TagTransform(self.dataroot / "Tags_nus-wide.ndjson"),
             transforms.ToDtype(torch.float32)
         ])
-        self.root = Path(root)
+        self.label_transform = transforms.Compose([
+            TagTransform(self.dataroot / "Labels_nus-wide.ndjson"),
+            transforms.ToDtype(torch.float32)
+        ])
         self.train_data = [
-            str(self.root / "assets" / "preprocessed" / "Train_nus-wide.ndjson"),
-            str(self.root  / "assets" / "preprocessed" / "Train_coco.ndjson"),
+            str(self.dataroot / "Train_nus-wide.ndjson"),
         ]
         self.test_data = [
-            str(self.root / "assets" / "preprocessed" / "Test_nus-wide.ndjson"),
-            str(self.root / "assets" / "preprocessed" / "Test_coco.ndjson"),
+            str(self.dataroot / "Test_nus-wide.ndjson"),
         ]
     
     def setup(self, stage: str):
@@ -81,14 +86,16 @@ class DataModule(lg.LightningDataModule):
                 root = self.root,
                 load_images = self.load_images,
                 transform = self.transform,
-                target_transform = self.target_transform,
+                label_transform = self.label_transform,
+                tag_transform = self.tag_transform,
             )
             self.val = CustomDataset(
                 self.test_data,
                 root = self.root,
                 load_images = self.load_images,
                 transform = self.transform,
-                target_transform = self.target_transform,
+                label_transform = self.label_transform,
+                tag_transform = self.tag_transform,
             )
 
         if stage == "test":
@@ -97,7 +104,8 @@ class DataModule(lg.LightningDataModule):
                 root = self.root,
                 load_images = self.load_images,
                 transform = self.transform,
-                target_transform = self.target_transform,
+                label_transform = self.label_transform,
+                tag_transform = self.tag_transform,
             )
 
         if stage == "predict":

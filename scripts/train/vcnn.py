@@ -15,7 +15,7 @@ data = DataModule(batch_size = 32, prefetch_factor = 16, num_workers = 6)
 
 trainer = lg.Trainer(
     devices = 1,
-    max_epochs = 10,
+    max_epochs = 5,
     accelerator = "gpu",
     default_root_dir = ROOT_DIR,
     logger = CSVLogger(ROOT_DIR, "logs", version=0),
@@ -31,14 +31,14 @@ trainer = lg.Trainer(
             save_top_k=3,
             dirpath=ROOT_DIR / "checkpoints",
             save_on_train_epoch_end=True,
-            filename="{H_F1:.3f}\:\:{v_num}\:\:{epoch}\:\:{val_loss:.3f}",
+            filename="{H_F1:.3f}@{v_num}@{epoch}@{val_loss:.3f}",
         ),
     ],
 )
 
 model = VCNN(
-    lr = 0.1,
-    weight_decay = 0.9997,
+    lr = 0.001,
+    weight_decay = 0.9,
 )
 
 freeze_layers = ["feature_extractor"]
