@@ -82,7 +82,7 @@ class MLP(lg.LightningModule):
         pred = (self.activation(pred) > 0.5).to(torch.int64)
         tags = tags.to(torch.int64)
         self.metrics.update(pred, tags)
-    
+
     def on_test_epoch_end(self):
         cp, cr = self.metrics.CP(), self.metrics.CR()
         cf1 = self.metrics.CF1()
