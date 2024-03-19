@@ -6,12 +6,13 @@ from models.compose import Model
 
 
 TRAINED_MODELS = Path("./assets/trained_models")
-ROOT_DIR = TRAINED_MODELS / "lp.train"
+ROOT_DIR = TRAINED_MODELS / "compose.test"
 
 
-data = DataModule()
+data = DataModule(batch_size=32, num_workers=6)
 trainer = lg.Trainer(
     devices=1,
+    limit_test_batches=1.0,
     accelerator="gpu",
     default_root_dir = ROOT_DIR,
 )
