@@ -10,7 +10,7 @@ from torchvision.transforms import v2 as transforms
 
 
 MODEL_ROOT = Path("./assets/trained_models")
-tag_transform = TagTransform("./assets/preprocessed/Labels_nus-wide.ndjson")
+tag_transform = TagTransform("./assets/preprocessed/Tags_nus-wide.ndjson")
 
 
 labels_f32 = transforms.Compose([

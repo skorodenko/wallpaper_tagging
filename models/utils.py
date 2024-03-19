@@ -5,6 +5,7 @@ import torch.nn.functional as F
 from torch import Tensor
 from pathlib import Path
 from typing import Iterable
+from collections import defaultdict
 from torchtext.data.utils import get_tokenizer
 from torchtext.vocab import build_vocab_from_iterator
 
@@ -126,9 +127,15 @@ class TagTransform:
         ).amax(dim=0)
         return val
     
-    def decode(self, cls: Tensor) -> list[str]:
-        tokens = cls.argmax(dim=1)
-        out = self.voc.lookup_tokens(tokens.tolist())
+    def decode(self, cls: Tensor) -> list[list[str]]:
+        bins = torch.argwhere(cls == 1)
+        d = defaultdict(list)
+        for k, v in bins:
+            d[k.item()].append(v.item())
+        ltokens = list(d.values())
+        out = []
+        for tokens in ltokens:
+            out.append(self.voc.lookup_tokens(tokens))
         return out
 
     def decode_topn(self, cls: Tensor, clen: Tensor) -> Tensor:
