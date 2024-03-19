@@ -3,8 +3,8 @@ import numpy as np
 import polars as pl
 import torch.nn.functional as F
 from torch import Tensor
-from pandas import Series
 from pathlib import Path
+from typing import Iterable
 from torchtext.data.utils import get_tokenizer
 from torchtext.vocab import build_vocab_from_iterator
 
@@ -113,7 +113,10 @@ class TagTransform:
         self.tags = set(self.voc.get_stoi().keys())
         self.voclen = len(self.voc)
         
-    def __call__(self, sample: Series) -> Tensor:
+    def __call__(self, sample: Iterable) -> Tensor:
+        return self.encode(sample)
+    
+    def encode(self, sample: Iterable) -> Tensor:
         ftags = [t for t in sample if t in self.tags]
         if ftags == []:
             return torch.zeros(self.voclen)
@@ -122,15 +125,17 @@ class TagTransform:
             num_classes=self.voclen
         ).amax(dim=0)
         return val
+    
+    def decode(self, cls: Tensor) -> list[str]:
+        tokens = cls.argmax(dim=1)
+        out = self.voc.lookup_tokens(tokens.tolist())
+        return out
 
-    def decode(self, cls: Tensor, clen: Tensor) -> list[str]:
-        ...
-#        sort_cls = cls.argsort(dim=1, descending=True)
-#        out = []
-#        for _class, _len in zip(sort_cls, clen):
-#            print(self.voc.lookup_tokens(_class[:10].tolist()))
-#            v = _class[:_len]
-#            d = self.voc.lookup_tokens(v.tolist())
-#            out.append(d)
-#        
-#        return out
+    def decode_topn(self, cls: Tensor, clen: Tensor) -> Tensor:
+        sort_cls = cls.argsort(dim=1, descending=True)
+        for i, (_class, _len) in enumerate(zip(sort_cls, clen)):
+            iones = _class[:_len]
+            cls[i] = torch.zeros_like(cls[i])
+            cls[i] = cls[i].put(iones, torch.ones(len(iones), device="cuda:0"))
+        return cls
+
