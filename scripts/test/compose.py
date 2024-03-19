@@ -9,10 +9,10 @@ TRAINED_MODELS = Path("./assets/trained_models")
 ROOT_DIR = TRAINED_MODELS / "compose.test"
 
 
-data = DataModule(batch_size=32, num_workers=6)
+data = DataModule(batch_size=1, num_workers=0)
 trainer = lg.Trainer(
     devices=1,
-    limit_test_batches=1.0,
+    limit_test_batches=4,
     accelerator="gpu",
     default_root_dir = ROOT_DIR,
 )
