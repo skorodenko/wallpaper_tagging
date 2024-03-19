@@ -1,15 +1,13 @@
 import torch
 import lightning as lg
-from .vcnn import VCNN
-from .mlp import MLP
-from .lp import LP
-from .lqp import LQP
-from pathlib import Path
+from models.lp import LP
+from models.mlp import MLP
+from models.lqp import LQP
+from models.vcnn import VCNN
 from .utils import TagTransform, Metrics
 from torchvision.transforms import v2 as transforms
 
 
-MODEL_ROOT = Path("./assets/trained_models")
 tag_transform = TagTransform("./assets/preprocessed/Tags_nus-wide.ndjson")
 
 
@@ -21,17 +19,23 @@ labels_f32 = transforms.Compose([
 
 class Model(lg.LightningModule):
     
-    def __init__(self):
+    def __init__(self, models: dict = None):
         super().__init__()
-        self.mscnn = VCNN.load_from_checkpoint(MODEL_ROOT / "vcnn.train" / "vcnn.ckpt")
-        self.mlp = MLP.load_from_checkpoint(MODEL_ROOT / "mlp.train" / "mlp.ckpt")
-        self.lp = LP.load_from_checkpoint(MODEL_ROOT / "lp.train" / "lp.ckpt")
-        self.lqp = LQP.load_from_checkpoint(MODEL_ROOT / "lqp.train" / "lqp.ckpt")
+        if models:
+            self.vcnn = models["vcnn"]
+            self.mlp = models["mlp"]
+            self.lp = models["lp"]
+            self.lqp = models["lqp"]
+        else:
+            self.vcnn = VCNN()
+            self.mlp = MLP()
+            self.lp = LP()
+            self.lqp = LQP()
         self.metrics = Metrics(81)
         
     def forward(self, x):
         image, labels = x
-        f_vis = self.mscnn.predict(image)
+        f_vis = self.vcnn.predict(image)
         f_text = self.mlp.predict(labels)
         f = torch.cat((f_vis, f_text), 1)
         labels = self.lp.predict(f)
