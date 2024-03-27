@@ -4,7 +4,7 @@ from models.mlp import MLP
 from models.lqp import LQP
 from models.vcnn import VCNN
 from models.compose import Model
-from safetensors.torch import save_model
+from safetensors.torch import save_file
 
 
 MODEL_ROOT = Path("./assets/trained_models")
@@ -24,6 +24,17 @@ model = Model(
         "lqp": lqp,
     }
 )
-model.freeze()
 
-save_model(model, MODEL_ROOT / "compose.test" / "compose.safetensors")
+ignore = ["lp.mlp", "lp.vcnn", "lqp.mlp", "lqp.vcnn"]
+state = model.state_dict()
+
+to_del = []
+for k in state.keys():
+    for ik in ignore:
+        if ik in k:
+            to_del.append(k)
+            
+for k in to_del:
+    state.pop(k)
+
+save_file(state, MODEL_ROOT / "compose.test" / "compose.safetensors")

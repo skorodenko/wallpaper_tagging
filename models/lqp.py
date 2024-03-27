@@ -13,18 +13,22 @@ labels_f32 = transforms.Compose([
 
 class LQP(lg.LightningModule):
     
-    def __init__(self, lr = 0.01, weight_decay = 0.01):
+    def __init__(self, lr = 0.01, weight_decay = 0.01, models: dict = None):
         super().__init__()
-        self.save_hyperparameters()
-        self.mscnn = VCNN.load_from_checkpoint("./assets/trained_models/vcnn.train/vcnn.ckpt")
-        self.mscnn.freeze()
-        self.mlp = MLP.load_from_checkpoint("./assets/trained_models/mlp.train/mlp.ckpt")
-        self.mlp.freeze()
+        self.save_hyperparameters(ignore=["models"])
+        if models:
+            self.vcnn = models["vcnn"]
+            self.mlp = models["mlp"]
+        else:
+            self.vcnn = VCNN()
+            self.mlp = MLP()
         self.fc = torch.nn.Sequential(
             torch.nn.Linear(81 * 2, 512),
             torch.nn.ReLU(),
+            torch.nn.Dropout(),
             torch.nn.Linear(512, 256),
             torch.nn.ReLU(),
+            torch.nn.Dropout(),
             torch.nn.Linear(256, 1),
         )
         self.loss_module = torch.nn.MSELoss()
@@ -49,7 +53,7 @@ class LQP(lg.LightningModule):
     
     def forward(self, x):
         image, labels = x
-        f_vis = self.mscnn.predict(image)
+        f_vis = self.vcnn.predict(image)
         f_text = self.mlp.predict(labels)
         f = torch.cat((f_vis, f_text), 1)
         x = self.fc(f)
