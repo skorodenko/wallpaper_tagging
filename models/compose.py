@@ -43,6 +43,12 @@ class Model(lg.LightningModule):
         number = number.round().to(torch.int64)
         labels_topn = tag_transform.decode_topn(labels, number)
         return labels_topn
+    
+    def predict_step(self, batch, batch_idx):
+        (image, tags, labels) = batch
+        pred = self.forward((image, labels))
+        pred = (pred > 0.5).to(torch.int64)
+        return tag_transform.decode(pred)
 
     def test_step(self, batch, batch_idx):
         (image, tags, labels) = batch

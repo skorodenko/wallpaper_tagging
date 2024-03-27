@@ -1,3 +1,4 @@
+import os
 import torch
 import pandas as pd
 import lightning as lg
@@ -21,6 +22,13 @@ class CustomDataset(Dataset):
             for f in files[1:]:
                 tmp = pd.read_json(f, lines=True)
                 self.images = pd.concat([self.images, tmp], ignore_index=True)
+        if imgs := os.environ.get("SPECIFIC_IMGS"):
+            imgs = imgs.split(",")
+            df = self.images[self.images["file_name"] == imgs[0]]
+            for img in imgs[1:]:
+                tmp = self.images[self.images["file_name"] == img]
+                df = pd.concat([df, tmp], ignore_index=True)
+            self.images = df
 
     def __len__(self):
         return len(self.images)
@@ -109,7 +117,14 @@ class DataModule(lg.LightningDataModule):
             )
 
         if stage == "predict":
-            self.predict = self.test
+            self.predict = CustomDataset(
+                self.test_data,
+                root = self.root,
+                load_images = self.load_images,
+                transform = self.transform,
+                label_transform = self.label_transform,
+                tag_transform = self.tag_transform,
+            )
             
     def train_dataloader(self):
         return DataLoader(

@@ -1,6 +1,8 @@
 import lightning as lg
 from data import DataModule
 from pathlib import Path
+from models.mlp import MLP
+from models.vcnn import VCNN
 from models.lqp import LQP
 from lightning.pytorch.loggers import CSVLogger
 from lightning.pytorch.callbacks import ModelCheckpoint, ModelSummary, LearningRateMonitor
@@ -40,9 +42,15 @@ trainer = lg.Trainer(
     ],
 )
 
+vcnn = VCNN.load_from_checkpoint("./assets/trained_models/vcnn.train/vcnn.ckpt")
+vcnn.freeze()
+mlp = MLP.load_from_checkpoint("./assets/trained_models/mlp.train/mlp.ckpt")
+mlp.freeze()
+
 model = LQP(
     lr = 0.0001,
     weight_decay=0.01,
+    models={"vcnn": vcnn, "mlp": mlp}
 )
 
 trainer.fit(model, datamodule=data) 
