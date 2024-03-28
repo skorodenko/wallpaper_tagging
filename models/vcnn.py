@@ -16,9 +16,13 @@ class VCNN(lg.LightningModule):
         )
         self.nfilters = resnet.fc.in_features
         self.base.fc = nn.Sequential(
-            nn.Linear(self.nfilters, 81),
+            nn.Linear(self.nfilters, 2048),
+            nn.ReLU(inplace = True),
+            nn.Linear(2048, 81)
         )
-        self.loss_module = nn.BCEWithLogitsLoss()
+        self.loss_module = nn.BCEWithLogitsLoss(
+            pos_weight = torch.ones(81) * 2
+        )
         self.activation = nn.Sigmoid()
         self.metrics = Metrics(81)
     
@@ -31,9 +35,10 @@ class VCNN(lg.LightningModule):
         scheduler = torch.optim.lr_scheduler.OneCycleLR(
             optimizer,
             max_lr = self.hparams.lr,
-            pct_start = 0.1,
+            pct_start = 0.3,
+            final_div_factor = 1e2,
             epochs = self.trainer.max_epochs,
-            steps_per_epoch = 1594,
+            steps_per_epoch = 3812,
         )
         return [optimizer], [{"scheduler": scheduler, "interval": "step"}]
         
@@ -47,19 +52,19 @@ class VCNN(lg.LightningModule):
         return x
     
     def training_step(self, batch, batch_idx):
-        (image, tags, _) = batch
+        (image, _, labels) = batch
         pred = self.forward(image)
-        loss = self.loss_module(pred, tags)
+        loss = self.loss_module(pred, labels)
         self.log("train_loss", loss, on_step=True, prog_bar=True)
         return loss
     
     def validation_step(self, batch, batch_idx):
-        (image, tags, _) = batch
+        (image, _, labels) = batch
         pred = self.forward(image)
-        loss = self.loss_module(pred, tags)
+        loss = self.loss_module(pred, labels)
         pred = (self.activation(pred) > 0.5).to(torch.int64)
-        tags = tags.to(torch.int64)
-        self.metrics.update(pred, tags)
+        labels = labels.to(torch.int64)
+        self.metrics.update(pred, labels)
         self.log("val_loss", loss, prog_bar=True)
     
     def on_validation_epoch_end(self):
@@ -78,11 +83,11 @@ class VCNN(lg.LightningModule):
         self.metrics.reset()
     
     def test_step(self, batch, batch_idx):
-        (image, tags, _) = batch
+        (image, _, labels) = batch
         pred = self.forward(image)
         pred = (self.activation(pred) > 0.5).to(torch.int64)
-        tags = tags.to(torch.int64)
-        self.metrics.update(pred, tags)
+        labels = labels.to(torch.int64)
+        self.metrics.update(pred, labels)
     
     def on_test_epoch_end(self):
         cp, cr = self.metrics.CP(), self.metrics.CR()

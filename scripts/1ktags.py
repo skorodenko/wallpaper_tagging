@@ -19,8 +19,8 @@ labels = labels.select(pl.col("labels").value_counts())
 tags = tags.unnest("tags").rename({"tags": "name"})
 labels = labels.unnest("labels").rename({"labels": "name"})
 
-tags = tags.sort(pl.col("count"), descending=True)
-labels = labels.sort(pl.col("count"), descending=True)
+tags = tags.sort(pl.col("count"), descending=True).head(1000)
+labels = labels.sort(pl.col("count"), descending=True).head(81)
 
 print(tags.collect())
 print(labels.collect())
