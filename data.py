@@ -67,10 +67,6 @@ class DataModule(lg.LightningDataModule):
         self.prepare_data_per_node = False
         self.transform = transforms.Compose([
             torchvision.models.ResNeXt50_32X4D_Weights.IMAGENET1K_V2.transforms()
-            #transforms.Resize(232),
-            #transforms.CenterCrop(224),
-            #transforms.ToDtype(torch.float32, scale=True),
-            #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
         ])
         self.root = Path(root)
         self.dataroot = self.root / "assets" / "preprocessed"
