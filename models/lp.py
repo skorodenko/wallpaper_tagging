@@ -30,7 +30,6 @@ class LP(lg.LightningModule):
             self.parameters(),
             lr = self.hparams.lr,
             weight_decay = self.hparams.weight_decay,
-            amsgrad = True,
         )
         scheduler = torch.optim.lr_scheduler.OneCycleLR(
             optimizer,

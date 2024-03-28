@@ -2,9 +2,10 @@ import os
 import torch
 import pandas as pd
 import lightning as lg
+import torchvision
 from pathlib import Path
 from models.utils import TagTransform
-from torchvision.io import read_image
+from torchvision.io import read_image, ImageReadMode
 from torchvision.transforms import v2 as transforms
 from torch.utils.data import Dataset, DataLoader
 
@@ -41,7 +42,7 @@ class CustomDataset(Dataset):
             row["file_name"],
         )
         if self.load_images:
-            image = read_image(str(image_path))
+            image = read_image(str(image_path), mode = ImageReadMode.RGB)
         else:
             image = 0
         labels = row["labels"]
@@ -65,10 +66,11 @@ class DataModule(lg.LightningDataModule):
         self.prefetch_factor = prefetch_factor
         self.prepare_data_per_node = False
         self.transform = transforms.Compose([
-            transforms.Resize(232),
-            transforms.CenterCrop(224),
-            transforms.ToDtype(torch.float32, scale=True),
-            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+            torchvision.models.ResNeXt50_32X4D_Weights.IMAGENET1K_V2.transforms()
+            #transforms.Resize(232),
+            #transforms.CenterCrop(224),
+            #transforms.ToDtype(torch.float32, scale=True),
+            #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
         ])
         self.root = Path(root)
         self.dataroot = self.root / "assets" / "preprocessed"

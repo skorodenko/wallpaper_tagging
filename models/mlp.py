@@ -11,12 +11,12 @@ class MLP(lg.LightningModule):
         self.save_hyperparameters()
         self.fc1 = torch.nn.Sequential(
             torch.nn.Linear(1000, 2048),
-            torch.nn.ReLU(inplace=True),
+            torch.nn.ReLU(),
         )
         self.fc2 = torch.nn.Sequential(
             torch.nn.Linear(2048, 81),
         )
-        self.activation = torch.nn.ReLU()  
+        self.activation = torch.nn.Sigmoid()  
         self.loss_module = torch.nn.BCEWithLogitsLoss()
         self.metrics = Metrics(81)
         
@@ -25,7 +25,6 @@ class MLP(lg.LightningModule):
             self.parameters(),
             lr = self.hparams.lr,
             weight_decay = self.hparams.weight_decay,
-            amsgrad = True,
         )
         scheduler = torch.optim.lr_scheduler.OneCycleLR(
             optimizer,
