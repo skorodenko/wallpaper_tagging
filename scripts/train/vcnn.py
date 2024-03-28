@@ -11,16 +11,17 @@ ROOT_DIR = TRAINED_MODELS / "vcnn.train"
 CKPT_PATH = TRAINED_MODELS / "vcnn.train" / "vcnn.ckpt"
 
 
-data = DataModule(batch_size = 32, prefetch_factor = 16, num_workers = 6)
+data = DataModule(batch_size = 50, prefetch_factor = 16, num_workers = 6)
 
 trainer = lg.Trainer(
     devices = 1,
-    max_epochs = 5,
+    max_epochs = 10,
     accelerator = "gpu",
     default_root_dir = ROOT_DIR,
     logger = CSVLogger(ROOT_DIR, "logs", version=0),
     limit_train_batches = 1.0,
     limit_val_batches = 1.0,
+    gradient_clip_val = None,
     callbacks = [
         ModelSummary(2),
         LearningRateMonitor(logging_interval = "step"),
@@ -37,15 +38,15 @@ trainer = lg.Trainer(
 )
 
 model = VCNN(
-    lr = 0.001,
-    weight_decay = 0.01,
+    lr = 0.0001,
+    weight_decay = 0.0003,
 )
 
-freeze_layers = ["feature_extractor"]
+#freeze_layers = ["conv_1", "conv_2", "conv_3", "conv_4", "conv_5"]
 
 for name, param in model.named_parameters():
-    for freeze in freeze_layers:
-        if freeze in name:
-            param.requires_grad = False
+    #for freeze in freeze_layers:
+        #if freeze in name:
+    param.requires_grad = True
 
 trainer.fit(model, datamodule=data)

@@ -7,10 +7,10 @@ from torchvision.io import read_image
 
 
 IMAGE_ROOT = "./assets/nus-wide/images"
-OUTPUT = "./assets/preprocessed/Test_nus-wide.ndjson"
-IMAGES = "./assets/nus-wide/TestImagelist.txt"
-TAGS_81 = "./assets/nus-wide/Test_Tags81.txt"
-TAGS_1K = "./assets/nus-wide/Test_Tags1k.dat"
+OUTPUT = "./assets/preprocessed/Train_nus-wide.ndjson"
+IMAGES = "./assets/nus-wide/TrainImagelist.txt"
+TAGS_81 = "./assets/nus-wide/Train_Tags81.txt"
+TAGS_1K = "./assets/nus-wide/Train_Tags1k.dat"
 
 
 IMAGE_FILES = glob.glob(r"*.*", root_dir=IMAGE_ROOT)
@@ -63,7 +63,10 @@ tags_81 = (
 )
 tags_81 = tags_81.group_by("file_name").agg(pl.col("tags"))
 
-images = tags_1k.join(tags_81, on="file_name")
+print(tags_1k.collect())
+print(tags_81.collect())
+
+images = tags_81.join(tags_1k, on="file_name", how="left")
 
 
 # Add root path

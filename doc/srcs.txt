@@ -1,0 +1,13 @@
+Classification
+Multi-column Deep Neural Networks for Image Classification [Submitted on 13 Feb 2012] https://arxiv.org/abs/1202.2745
+ImageNet Classification with Deep Convolutional Neural Networks [2012] https://papers.nips.cc/paper_files/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html
+
+CNN
+Very Deep Convolutional Networks for Large-Scale Image Recognition [10 Apr 2015] https://arxiv.org/abs/1409.1556
+An Introduction to Convolutional Neural Networks [Submitted on 26 Nov 2015] https://arxiv.org/abs/1511.08458
+Deep Residual Learning for Image Recognition [Submitted on 10 Dec 2015] https://arxiv.org/abs/1512.03385
+Multi-scale recognition with DAG-CNNs [Submitted on 20 May 2015] https://arxiv.org/abs/1505.05232
+Love Thy Neighbors: Image Annotation by Exploiting Image Metadata [22 Sep 2015] https://arxiv.org/abs/1508.07647
+
+CNN + Context
+Improving Image Classification with Location Context [Submitted on 14 May 2015] https://arxiv.org/abs/1505.03873
