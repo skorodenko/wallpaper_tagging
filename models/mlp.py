@@ -12,9 +12,11 @@ class MLP(lg.LightningModule):
         self.fc1 = torch.nn.Sequential(
             torch.nn.Linear(1000, 2048),
             torch.nn.ReLU(),
+            torch.nn.Dropout(),
         )
         self.fc2 = torch.nn.Sequential(
             torch.nn.Linear(2048, 81),
+            torch.nn.Dropout(),
         )
         self.activation = torch.nn.Sigmoid()  
         self.loss_module = torch.nn.BCEWithLogitsLoss()
@@ -30,7 +32,7 @@ class MLP(lg.LightningModule):
             optimizer,
             max_lr = self.hparams.lr,
             epochs = self.trainer.max_epochs,
-            steps_per_epoch = 2490,
+            steps_per_epoch = 3812,
         )
         return [optimizer], [{"scheduler": scheduler, "interval": "step"}]
     
@@ -46,18 +48,18 @@ class MLP(lg.LightningModule):
 
     def training_step(self, batch, batch_idx):
         (_, tags, labels) = batch
-        pred = self.forward(labels)
-        loss = self.loss_module(pred, tags)
+        pred = self.forward(tags)
+        loss = self.loss_module(pred, labels)
         self.log("train_loss", loss, on_step=True, prog_bar=True)
         return loss
     
     def validation_step(self, batch, batch_idx):
         (_, tags, labels) = batch
-        pred = self.forward(labels)
-        loss = self.loss_module(pred, tags)
+        pred = self.forward(tags)
+        loss = self.loss_module(pred, labels)
         pred = (self.activation(pred) > 0.5).to(torch.int64)
-        tags = tags.to(torch.int64)
-        self.metrics.update(pred, tags)
+        labels = labels.to(torch.int64)
+        self.metrics.update(pred, labels)
         self.log("val_loss", loss, prog_bar=True)
     
     def on_validation_epoch_end(self):
@@ -75,24 +77,3 @@ class MLP(lg.LightningModule):
         self.log("H_F1", hf1, prog_bar=True)
         self.metrics.reset()
     
-    def test_step(self, batch, batch_idx):
-        (_, tags, labels) = batch
-        pred = self.forward(labels)
-        pred = (self.activation(pred) > 0.5).to(torch.int64)
-        tags = tags.to(torch.int64)
-        self.metrics.update(pred, tags)
-
-    def on_test_epoch_end(self):
-        cp, cr = self.metrics.CP(), self.metrics.CR()
-        cf1 = self.metrics.CF1()
-        ip, ir = self.metrics.IP(), self.metrics.IR()
-        if1 = self.metrics.IF1()
-        hf1 = self.metrics.HF1()
-        self.log("CP", cp)
-        self.log("CR", cr)
-        self.log("IP", ip)
-        self.log("IR", ir)
-        self.log("C_F1", cf1)
-        self.log("I_F1", if1)
-        self.log("H_F1", hf1, prog_bar=True)
-        self.metrics.reset()
