@@ -33,8 +33,12 @@
 \RequirePackage{multirow} % пакет для об'єднання рядків таблиці
 \RequirePackage{array} % пакет для вирівнювання всередині таблиці
 
-% пакет для мультицитат
-\RequirePackage{cite}
+% пакет для бібліографії
+\RequirePackage[style=german]{csquotes}
+\RequirePackage[
+    backend=biber,
+    sorting=nyt,
+]{biblatex}
 
 % пакети для форматування відступів та полів
 \RequirePackage[includehead, headsep=0pt, footskip=0pt, top=2cm, bottom=2cm, left=2cm, right=1cm]{geometry} % задаємо поля сторінки
@@ -254,8 +258,8 @@
 \renewcommand{\cftsubsecleader}{\cftdotfill{\cftsubsecdotsep}} % чим заповнювати проміжок від заголовку до номеру сторінки (точками)
 
 % заголовки таблиць, рисунків і лістингів
-\DeclareCaptionLabelFormat{tablecap}{Табл. #2} % формат за промовчанням "Табл." не влаштовує
-\DeclareCaptionLabelFormat{figurecap}{Рис. #2} % формат за промовчанням "Рис." не влаштовує
+\DeclareCaptionLabelFormat{tablecap}{Табл. #2}
+\DeclareCaptionLabelFormat{figurecap}{Рис. #2}
 \DeclareCaptionLabelFormat{listing}{Лістинг файлу #2}
 
 \captionsetup[table]{margin=0pt,singlelinecheck=false, justification=centering, labelsep=endash, labelformat=tablecap, font = {stretch = 1.5}, belowskip=18pt, aboveskip=3pt} % формат для таблиць
@@ -268,12 +272,16 @@
 % команда, що змінює латинські літери на кирилічні в підрисунках
 \DeclareCaptionSubType*{figure}
 \renewcommand\thesubfigure{\thefigure \asbuk{subfigure}}
-% \renewcommand{\thesubfigure}{\asbuk{subfigure}}
 
 % Переназвемо бібліографію
-\addto\captionsukrainian{
-  \renewcommand{\bibname}{ПЕРЕЛІК ПОСИЛАНЬ}
-}
+\defbibheading{bibliography}[\bibname]{%
+\uchapter{Перелік посилань}}
+\DefineBibliographyStrings{ukrainian}{
+ and = {та},
+ number = {№},
+ pages = {С\adddot}
+}%
+
 
 % змінюємо формат номеру для переліку посилань (число + крапка)
 % \makeatletter

@@ -18,7 +18,7 @@ class LP(lg.LightningModule):
         )
         self.activation = torch.nn.Sigmoid()
         self.loss_module = torch.nn.BCEWithLogitsLoss(
-            pos_weight = torch.ones(81) * 2
+            pos_weight = torch.ones(81) * 4
         )
         self.metrics = Metrics(81)
     
