@@ -16,9 +16,8 @@ class MLP(lg.LightningModule):
         )
         self.fc2 = torch.nn.Sequential(
             torch.nn.Linear(2048, 81),
-            torch.nn.Dropout(),
         )
-        self.activation = torch.nn.Sigmoid()  
+        self.activation = torch.nn.ReLU()  
         self.loss_module = torch.nn.BCEWithLogitsLoss()
         self.metrics = Metrics(81)
         

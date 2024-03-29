@@ -21,8 +21,6 @@ trainer = lg.Trainer(
     accelerator="gpu",
     default_root_dir = ROOT_DIR,
     logger=CSVLogger(ROOT_DIR, "logs", version=0),
-    limit_train_batches = 1.0,
-    limit_val_batches = 1.0,
     callbacks=[
         ModelSummary(2),
         LearningRateMonitor(logging_interval = "step"),
@@ -49,7 +47,7 @@ mlp.freeze()
 
 model = LQP(
     lr = 0.0001,
-    weight_decay=0.01,
+    weight_decay=0.0003,
     models={"vcnn": vcnn, "mlp": mlp}
 )
 

@@ -12,8 +12,8 @@ MODEL_ROOT = Path("./assets/trained_models")
 
 vcnn = VCNN.load_from_checkpoint(MODEL_ROOT / "vcnn.train" / "vcnn.ckpt")
 mlp = MLP.load_from_checkpoint(MODEL_ROOT / "mlp.train" / "mlp.ckpt")
-lp = LP.load_from_checkpoint(MODEL_ROOT / "lp.train" / "lp.ckpt")
-lqp = LQP.load_from_checkpoint(MODEL_ROOT / "lqp.train" / "lqp.ckpt")
+lp = LP.load_from_checkpoint(MODEL_ROOT / "lp.train" / "lp.ckpt", strict=False)
+lqp = LQP.load_from_checkpoint(MODEL_ROOT / "lqp.train" / "lqp.ckpt", strict=False)
 
 
 model = Model(
