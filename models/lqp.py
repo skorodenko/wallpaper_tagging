@@ -20,12 +20,12 @@ class LQP(lg.LightningModule):
             self.vcnn = models.get("vcnn", VCNN())
             self.mlp = models.get("mlp", MLP())
         self.fc = torch.nn.Sequential(
-            torch.nn.Linear(81 * 2, 512),
+            torch.nn.Dropout(),
+            torch.nn.Linear(81 * 2, 256),
             torch.nn.ReLU(),
             torch.nn.Dropout(),
-            torch.nn.Linear(512, 256),
+            torch.nn.Linear(256, 256),
             torch.nn.ReLU(),
-            torch.nn.Dropout(),
             torch.nn.Linear(256, 1),
         )
         self.loss_module = torch.nn.MSELoss()
