@@ -82,24 +82,3 @@ class VCNN(lg.LightningModule):
         self.log("H_F1", hf1, prog_bar=True)
         self.metrics.reset()
     
-    def test_step(self, batch, batch_idx):
-        (image, _, labels) = batch
-        pred = self.forward(image)
-        pred = (self.activation(pred) > 0.5).to(torch.int64)
-        labels = labels.to(torch.int64)
-        self.metrics.update(pred, labels)
-    
-    def on_test_epoch_end(self):
-        cp, cr = self.metrics.CP(), self.metrics.CR()
-        cf1 = self.metrics.CF1()
-        ip, ir = self.metrics.IP(), self.metrics.IR()
-        if1 = self.metrics.IF1()
-        hf1 = self.metrics.HF1()
-        self.log("CP", cp)
-        self.log("CR", cr)
-        self.log("IP", ip)
-        self.log("IR", ir)
-        self.log("C_F1", cf1)
-        self.log("I_F1", if1)
-        self.log("H_F1", hf1, prog_bar=True)
-        self.metrics.reset()
