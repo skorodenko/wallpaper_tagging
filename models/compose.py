@@ -8,7 +8,7 @@ from .utils import TagTransform, Metrics
 from torchvision.transforms import v2 as transforms
 
 
-tag_transform = TagTransform("./assets/preprocessed/Tags_nus-wide.ndjson")
+tag_transform = TagTransform("./assets/preprocessed/Labels_nus-wide.ndjson")
 
 
 labels_f32 = transforms.Compose([
@@ -34,28 +34,28 @@ class Model(lg.LightningModule):
         self.metrics = Metrics(81)
         
     def forward(self, x):
-        image, labels = x
+        image, tags = x
         f_vis = self.vcnn.predict(image)
-        f_text = self.mlp.predict(labels)
+        f_text = self.mlp.predict(tags)
         f = torch.cat((f_vis, f_text), 1)
-        labels = self.lp.predict(f)
+        pred = self.lp.predict(f)
         number = self.lqp.predict(f)
         number = number.round().to(torch.int64)
-        labels_topn = tag_transform.decode_topn(labels, number)
-        return labels_topn
+        pred_topn = tag_transform.decode_topn(pred, number)
+        return pred_topn
     
     def predict_step(self, batch, batch_idx):
         (image, tags, labels) = batch
-        pred = self.forward((image, labels))
+        pred = self.forward((image, tags))
         pred = (pred > 0.5).to(torch.int64)
         return tag_transform.decode(pred)
 
     def test_step(self, batch, batch_idx):
         (image, tags, labels) = batch
-        pred = self.forward((image, labels))
+        pred = self.forward((image, tags))
         pred = (pred > 0.5).to(torch.int64)
-        tags = tags.to(torch.int64)
-        self.metrics.update(pred, tags)
+        labels = labels.to(torch.int64)
+        self.metrics.update(pred, labels)
     
     def on_test_epoch_end(self):
         cp, cr = self.metrics.CP(), self.metrics.CR()

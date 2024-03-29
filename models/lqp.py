@@ -17,11 +17,8 @@ class LQP(lg.LightningModule):
         super().__init__()
         self.save_hyperparameters(ignore=["models"])
         if models:
-            self.vcnn = models["vcnn"]
-            self.mlp = models["mlp"]
-        else:
-            self.vcnn = VCNN()
-            self.mlp = MLP()
+            self.vcnn = models.get("vcnn", VCNN())
+            self.mlp = models.get("mlp", MLP())
         self.fc = torch.nn.Sequential(
             torch.nn.Linear(81 * 2, 512),
             torch.nn.ReLU(),
@@ -43,7 +40,7 @@ class LQP(lg.LightningModule):
             optimizer,
             max_lr = self.hparams.lr,
             epochs = self.trainer.max_epochs,
-            steps_per_epoch = 2490,
+            steps_per_epoch = 3812,
         )
         return [optimizer], [{"scheduler": scheduler, "interval": "step"}]
     
@@ -52,25 +49,25 @@ class LQP(lg.LightningModule):
         return x
     
     def forward(self, x):
-        image, labels = x
+        image, tags = x
         f_vis = self.vcnn.predict(image)
-        f_text = self.mlp.predict(labels)
+        f_text = self.mlp.predict(tags)
         f = torch.cat((f_vis, f_text), 1)
         x = self.fc(f)
         return x
 
     def training_step(self, batch, batch_idx):
         (image, tags, labels) = batch
-        pred = self.forward((image, labels))
-        f_tags = labels_f32(tags)
-        loss = self.loss_module(pred, f_tags)
+        pred = self.forward((image, tags))
+        f_labels = labels_f32(labels)
+        loss = self.loss_module(pred, f_labels)
         self.log("train_loss", loss, on_step=True, prog_bar=True)
         return loss
     
     def validation_step(self, batch, batch_idx):
         (image, tags, labels) = batch
-        pred = self.forward((image, labels))
-        f_tags = labels_f32(tags)
-        loss = self.loss_module(pred, f_tags)
+        pred = self.forward((image, tags))
+        f_labels = labels_f32(labels)
+        loss = self.loss_module(pred, f_labels)
         self.log("val_loss", loss, prog_bar=True)
     
