@@ -3,7 +3,10 @@ import torch.nn as nn
 import torchvision
 import lightning as lg
 from torch import Tensor
-from models.utils import Metrics
+from models.utils import Metrics, TagTransform, nlabels_f32
+
+
+label_transform = TagTransform("./assets/preprocessed/Labels_nus-wide.ndjson")
 
 
 class VCNN(lg.LightningModule):
@@ -30,9 +33,7 @@ class VCNN(lg.LightningModule):
         self.fc = nn.Sequential(
             nn.Linear(self.nfilters, 81),
         )
-        self.loss_module = nn.BCEWithLogitsLoss(
-            pos_weight = torch.ones(81) * 2
-        )
+        self.loss_module = nn.BCEWithLogitsLoss()
         self.activation = nn.Sigmoid()
         self.metrics = Metrics(81)
     
@@ -45,7 +46,7 @@ class VCNN(lg.LightningModule):
         scheduler = torch.optim.lr_scheduler.MultiStepLR(
             optimizer,
             milestones=[5,10], 
-            gamma=0.5
+            gamma=0.5,
         )
         return [optimizer], [{"scheduler": scheduler, "interval": "epoch"}]
         
@@ -70,8 +71,11 @@ class VCNN(lg.LightningModule):
         (image, _, labels) = batch
         pred = self.forward(image)
         loss = self.loss_module(pred, labels)
-        pred = (self.activation(pred) > 0.5).to(torch.int64)
+        topn = nlabels_f32(labels)
         labels = labels.to(torch.int64)
+        topn = topn.to(torch.int64)
+        pred = label_transform.decode_topn(pred, topn)
+        pred = pred.to(torch.int64)
         self.metrics.update(pred, labels)
         self.log("val_loss", loss, prog_bar=True)
     

@@ -2,7 +2,7 @@ import torch
 import lightning as lg
 from .vcnn import VCNN
 from .mlp import MLP
-from .utils import labels_f32#, f32_labels
+from .utils import nlabels_f32
 
 
 
@@ -15,12 +15,11 @@ class LQP(lg.LightningModule):
             self.vcnn = models.get("vcnn", VCNN())
             self.mlp = models.get("mlp", MLP())
         self.fc = torch.nn.Sequential(
-            torch.nn.Linear(81 * 2, 512, bias=False),
+            torch.nn.Linear(81 * 2, 512),
             torch.nn.ReLU(inplace=True),
-            torch.nn.Linear(512, 256, bias = False),
+            torch.nn.Linear(512, 256),
             torch.nn.ReLU(inplace=True),
-            torch.nn.Linear(256, 1, bias = False),
-            torch.nn.Sigmoid(),
+            torch.nn.Linear(256, 1),
         )
         self.loss_module = torch.nn.MSELoss()
 
@@ -52,8 +51,7 @@ class LQP(lg.LightningModule):
     def training_step(self, batch, batch_idx):
         (image, tags, labels) = batch
         pred = self.forward((image, tags))
-        f_labels = labels_f32(labels)
-        #pred = f32_labels(pred)
+        f_labels = nlabels_f32(labels)
         loss = self.loss_module(pred, f_labels)
         self.log("train_loss", loss, on_step=True, prog_bar=True)
         return loss
@@ -61,7 +59,7 @@ class LQP(lg.LightningModule):
     def validation_step(self, batch, batch_idx):
         (image, tags, labels) = batch
         pred = self.forward((image, tags))
-        f_labels = labels_f32(labels)
+        f_labels = nlabels_f32(labels)
         loss = self.loss_module(pred, f_labels)
         self.log("val_loss", loss, prog_bar=True)
     

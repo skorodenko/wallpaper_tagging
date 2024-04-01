@@ -2,7 +2,10 @@ import torch
 import lightning as lg
 from .vcnn import VCNN
 from .mlp import MLP
-from models.utils import Metrics
+from models.utils import Metrics, TagTransform, nlabels_f32
+
+
+label_transform = TagTransform("./assets/preprocessed/Labels_nus-wide.ndjson")
 
 
 class LP(lg.LightningModule):
@@ -57,8 +60,11 @@ class LP(lg.LightningModule):
         (image, tags, labels) = batch
         pred = self.forward((image, tags))
         loss = self.loss_module(pred, labels)
-        pred = (self.activation(pred) > 0.5).to(torch.int64)
+        topn = nlabels_f32(labels)
         labels = labels.to(torch.int64)
+        topn = topn.to(torch.int64)
+        pred = label_transform.decode_topn(pred, topn)
+        pred = pred.to(torch.int64)
         self.metrics.update(pred, labels)
         self.log("val_loss", loss, prog_bar=True)
         
