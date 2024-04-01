@@ -4,7 +4,6 @@ from pathlib import Path
 from models.mlp import MLP
 from lightning.pytorch.loggers import CSVLogger
 from lightning.pytorch.callbacks import ModelCheckpoint, ModelSummary, LearningRateMonitor
-from lightning.pytorch.callbacks.early_stopping import EarlyStopping
 
 
 TRAINED_MODELS = Path("./assets/trained_models")
@@ -27,22 +26,16 @@ trainer = lg.Trainer(
             monitor="H_F1",
             mode="max",
             save_weights_only=True,
-            save_top_k=3,
+            save_top_k=-1,
             dirpath=ROOT_DIR / "checkpoints",
             save_on_train_epoch_end=True,
-            filename="{H_F1:.3f}@{v_num}@{epoch}@{val_loss:.3f}",
-        ),
-        EarlyStopping(
-            patience=5,
-            monitor="val_loss", 
-            mode="min",
-            min_delta=0.01,
+            filename="{H_F1:.5f}@{v_num}@{epoch}@{val_loss:.3f}",
         ),
     ],
 )
 
 model = MLP(
-    lr = 0.001,
+    lr = 0.0001,
     weight_decay=0.0003,
 )
 

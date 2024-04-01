@@ -11,14 +11,24 @@ class VCNN(lg.LightningModule):
     def __init__(self, lr: float = ..., weight_decay: float = ...):
         super().__init__()
         self.save_hyperparameters()
-        self.base = resnet = torchvision.models.resnext50_32x4d(
-            weights=torchvision.models.ResNeXt50_32X4D_Weights.IMAGENET1K_V2
+        base = torchvision.models.resnext101_32x8d(
+            weights=torchvision.models.ResNeXt101_32X8D_Weights.IMAGENET1K_V2
         )
-        self.nfilters = resnet.fc.in_features
-        self.base.fc = nn.Sequential(
-            nn.Linear(self.nfilters, 2048),
-            nn.ReLU(inplace = True),
-            nn.Linear(2048, 81)
+        self.nfilters = base.fc.in_features
+        self.feature_extractor = nn.Sequential(
+            base.conv1,
+            base.bn1,
+            base.relu,
+            base.maxpool,
+            base.layer1,
+            base.layer2,
+            base.layer3,
+            base.layer4,
+            base.avgpool,
+            nn.Flatten(),
+        )
+        self.fc = nn.Sequential(
+            nn.Linear(self.nfilters, 81),
         )
         self.loss_module = nn.BCEWithLogitsLoss(
             pos_weight = torch.ones(81) * 2
@@ -28,19 +38,16 @@ class VCNN(lg.LightningModule):
     
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(
-            self.parameters(),
+            filter(lambda p: p.requires_grad, self.parameters()),
             lr = self.hparams.lr,
             weight_decay = self.hparams.weight_decay,
         )
-        scheduler = torch.optim.lr_scheduler.OneCycleLR(
+        scheduler = torch.optim.lr_scheduler.MultiStepLR(
             optimizer,
-            max_lr = self.hparams.lr,
-            pct_start = 0.3,
-            final_div_factor = 1e2,
-            epochs = self.trainer.max_epochs,
-            steps_per_epoch = 3812,
+            milestones=[5,10], 
+            gamma=0.5
         )
-        return [optimizer], [{"scheduler": scheduler, "interval": "step"}]
+        return [optimizer], [{"scheduler": scheduler, "interval": "epoch"}]
         
     def predict(self, x: Tensor):
         x = self.forward(x)
@@ -48,7 +55,8 @@ class VCNN(lg.LightningModule):
         return x
     
     def forward(self, x: Tensor):
-        x = self.base(x)
+        x = self.feature_extractor(x)
+        x = self.fc(x)
         return x
     
     def training_step(self, batch, batch_idx):
@@ -67,6 +75,9 @@ class VCNN(lg.LightningModule):
         self.metrics.update(pred, labels)
         self.log("val_loss", loss, prog_bar=True)
     
+    def test_step(self, batch, batch_idx):
+        self.validation_step(batch, batch_idx)
+    
     def on_validation_epoch_end(self):
         cp, cr = self.metrics.CP(), self.metrics.CR()
         cf1 = self.metrics.CF1()
@@ -82,3 +93,5 @@ class VCNN(lg.LightningModule):
         self.log("H_F1", hf1, prog_bar=True)
         self.metrics.reset()
     
+    def on_test_epoch_end(self):
+        self.on_validation_epoch_end()

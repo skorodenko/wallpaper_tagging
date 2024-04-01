@@ -12,28 +12,28 @@ class MLP(lg.LightningModule):
         self.fc1 = torch.nn.Sequential(
             torch.nn.Linear(1000, 2048),
             torch.nn.ReLU(),
-            torch.nn.Dropout(),
         )
         self.fc2 = torch.nn.Sequential(
             torch.nn.Linear(2048, 81),
         )
-        self.activation = torch.nn.ReLU()  
-        self.loss_module = torch.nn.BCEWithLogitsLoss()
+        self.activation = torch.nn.Sigmoid()  
+        self.loss_module = torch.nn.BCEWithLogitsLoss(
+            pos_weight = torch.ones(81) * 2
+        )
         self.metrics = Metrics(81)
         
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(
-            self.parameters(),
+            filter(lambda p: p.requires_grad, self.parameters()),
             lr = self.hparams.lr,
             weight_decay = self.hparams.weight_decay,
         )
-        scheduler = torch.optim.lr_scheduler.OneCycleLR(
+        scheduler = torch.optim.lr_scheduler.MultiStepLR(
             optimizer,
-            max_lr = self.hparams.lr,
-            epochs = self.trainer.max_epochs,
-            steps_per_epoch = 3812,
+            milestones=[5,10], 
+            gamma=0.5
         )
-        return [optimizer], [{"scheduler": scheduler, "interval": "step"}]
+        return [optimizer], [{"scheduler": scheduler, "interval": "epoch"}]
     
     def predict(self, x: Tensor):
         x = self(x)
