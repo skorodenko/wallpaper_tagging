@@ -12,10 +12,9 @@ from torchtext.vocab import build_vocab_from_iterator
 from lightning.pytorch.callbacks import BaseFinetuning
 
 
-labels_f32 = transforms.Compose([
+nlabels_f32 = transforms.Compose([
     transforms.Lambda(lambda x: x.sum(axis=1)),
     transforms.Lambda(lambda x: x.unsqueeze(1)),
-    transforms.Lambda(lambda x: x / 81)
 ])
 
 #f32_labels = transforms.Compose([

@@ -15,7 +15,7 @@ data = DataModule(batch_size=32, num_workers=6)
 trainer = lg.Trainer(
     devices=1,
     accelerator="gpu",
-    limit_test_batches=0.01,
+    limit_test_batches=1.0,
     default_root_dir = ROOT_DIR,
     logger=CSVLogger(ROOT_DIR, "logs", version=0),
 )

@@ -44,7 +44,7 @@ mlp = MLP.load_from_checkpoint("./assets/trained_models/mlp.train/mlp.ckpt")
 mlp.freeze()
 
 model = LP(
-    lr = 0.1,
+    lr = 0.01,
     weight_decay=0.0003,
     models = {"vcnn": vcnn, "mlp": mlp}
 )

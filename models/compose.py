@@ -33,7 +33,7 @@ class Model(lg.LightningModule):
         f = torch.cat((f_vis, f_text), 1)
         pred = self.lp.predict(f)
         number = self.lqp.predict(f)
-        number = number.mul(81).round().to(torch.int64)
+        number = number.round().to(torch.int64)
         pred_topn = tag_transform.decode_topn(pred, number)
         return pred_topn
     
