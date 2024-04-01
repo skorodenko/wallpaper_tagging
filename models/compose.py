@@ -5,16 +5,9 @@ from models.mlp import MLP
 from models.lqp import LQP
 from models.vcnn import VCNN
 from .utils import TagTransform, Metrics
-from torchvision.transforms import v2 as transforms
 
 
 tag_transform = TagTransform("./assets/preprocessed/Labels_nus-wide.ndjson")
-
-
-labels_f32 = transforms.Compose([
-    transforms.Lambda(lambda x: x.sum(axis=1)),
-    transforms.Lambda(lambda x: x.unsqueeze(1)),
-])
 
 
 class Model(lg.LightningModule):
@@ -40,20 +33,22 @@ class Model(lg.LightningModule):
         f = torch.cat((f_vis, f_text), 1)
         pred = self.lp.predict(f)
         number = self.lqp.predict(f)
-        number = number.round().to(torch.int64)
+        number = number.mul(81).round().to(torch.int64)
         pred_topn = tag_transform.decode_topn(pred, number)
         return pred_topn
     
     def predict_step(self, batch, batch_idx):
         (image, tags, labels) = batch
         pred = self.forward((image, tags))
-        pred = (pred > 0.5).to(torch.int64)
+        #pred = (pred > 0.5).to(torch.int64)
+        pred = pred.to(torch.int64)
         return tag_transform.decode(pred)
 
     def test_step(self, batch, batch_idx):
         (image, tags, labels) = batch
         pred = self.forward((image, tags))
-        pred = (pred > 0.5).to(torch.int64)
+        #pred = (pred > 0.5).to(torch.int64)
+        pred = pred.to(torch.int64)
         labels = labels.to(torch.int64)
         self.metrics.update(pred, labels)
     

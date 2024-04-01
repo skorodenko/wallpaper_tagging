@@ -6,8 +6,21 @@ from torch import Tensor
 from pathlib import Path
 from typing import Iterable
 from collections import defaultdict
+from torchvision.transforms import v2 as transforms
 from torchtext.data.utils import get_tokenizer
 from torchtext.vocab import build_vocab_from_iterator
+from lightning.pytorch.callbacks import BaseFinetuning
+
+
+labels_f32 = transforms.Compose([
+    transforms.Lambda(lambda x: x.sum(axis=1)),
+    transforms.Lambda(lambda x: x.unsqueeze(1)),
+    transforms.Lambda(lambda x: x / 81)
+])
+
+#f32_labels = transforms.Compose([
+#    transforms.Lambda(lambda x: x * 81),
+#])
 
 
 class Metrics:
@@ -146,3 +159,20 @@ class TagTransform:
             cls[i] = cls[i].put(iones, torch.ones(len(iones), device="cuda:0"))
         return cls
 
+
+class FEFinetune(BaseFinetuning):
+    def __init__(self, unfreeze_at_epoch=10, freeze_only = False):
+        super().__init__()
+        self._unfreeze_at_epoch = unfreeze_at_epoch
+        self._freeze_only = freeze_only
+
+    def freeze_before_training(self, pl_module):
+        self.freeze(pl_module.feature_extractor, train_bn=False)
+
+    def finetune_function(self, pl_module, current_epoch, optimizer):
+        if current_epoch == self._unfreeze_at_epoch and not self._freeze_only:
+            self.unfreeze_and_add_param_group(
+                modules=pl_module.feature_extractor,
+                optimizer=optimizer,
+                train_bn=False,
+            )

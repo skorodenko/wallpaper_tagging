@@ -2,13 +2,8 @@ import torch
 import lightning as lg
 from .vcnn import VCNN
 from .mlp import MLP
-from torchvision.transforms import v2 as transforms
+from .utils import labels_f32#, f32_labels
 
-
-labels_f32 = transforms.Compose([
-    transforms.Lambda(lambda x: x.sum(axis=1)),
-    transforms.Lambda(lambda x: x.unsqueeze(1)),
-])
 
 
 class LQP(lg.LightningModule):
@@ -20,29 +15,27 @@ class LQP(lg.LightningModule):
             self.vcnn = models.get("vcnn", VCNN())
             self.mlp = models.get("mlp", MLP())
         self.fc = torch.nn.Sequential(
-            torch.nn.Dropout(),
-            torch.nn.Linear(81 * 2, 256),
-            torch.nn.ReLU(),
-            torch.nn.Dropout(),
-            torch.nn.Linear(256, 256),
-            torch.nn.ReLU(),
-            torch.nn.Linear(256, 1),
+            torch.nn.Linear(81 * 2, 512, bias=False),
+            torch.nn.ReLU(inplace=True),
+            torch.nn.Linear(512, 256, bias = False),
+            torch.nn.ReLU(inplace=True),
+            torch.nn.Linear(256, 1, bias = False),
+            torch.nn.Sigmoid(),
         )
         self.loss_module = torch.nn.MSELoss()
 
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(
-            self.parameters(),
+            filter(lambda p: p.requires_grad, self.parameters()),
             lr = self.hparams.lr,
             weight_decay = self.hparams.weight_decay,
         )
-        scheduler = torch.optim.lr_scheduler.OneCycleLR(
+        scheduler = torch.optim.lr_scheduler.MultiStepLR(
             optimizer,
-            max_lr = self.hparams.lr,
-            epochs = self.trainer.max_epochs,
-            steps_per_epoch = 3812,
+            milestones=[5,10], 
+            gamma=0.5,
         )
-        return [optimizer], [{"scheduler": scheduler, "interval": "step"}]
+        return [optimizer], [{"scheduler": scheduler, "interval": "epoch"}]
     
     def predict(self, x):
         x = self.fc(x)
@@ -60,6 +53,7 @@ class LQP(lg.LightningModule):
         (image, tags, labels) = batch
         pred = self.forward((image, tags))
         f_labels = labels_f32(labels)
+        #pred = f32_labels(pred)
         loss = self.loss_module(pred, f_labels)
         self.log("train_loss", loss, on_step=True, prog_bar=True)
         return loss

@@ -17,24 +17,21 @@ class LP(lg.LightningModule):
             torch.nn.Linear(81 * 2, 81),
         )
         self.activation = torch.nn.Sigmoid()
-        self.loss_module = torch.nn.BCEWithLogitsLoss(
-            pos_weight = torch.ones(81) * 4
-        )
+        self.loss_module = torch.nn.BCEWithLogitsLoss()
         self.metrics = Metrics(81)
     
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(
-            self.parameters(),
+            filter(lambda p: p.requires_grad, self.parameters()),
             lr = self.hparams.lr,
             weight_decay = self.hparams.weight_decay,
         )
-        scheduler = torch.optim.lr_scheduler.OneCycleLR(
+        scheduler = torch.optim.lr_scheduler.MultiStepLR(
             optimizer,
-            max_lr = self.hparams.lr,
-            epochs = self.trainer.max_epochs,
-            steps_per_epoch = 3812,
+            milestones=[5,10], 
+            gamma=0.5
         )
-        return [optimizer], [{"scheduler": scheduler, "interval": "step"}]
+        return [optimizer], [{"scheduler": scheduler, "interval": "epoch"}]
 
     def predict(self, x):
         x = self.fc(x)
