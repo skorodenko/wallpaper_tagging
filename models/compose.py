@@ -40,14 +40,12 @@ class Model(lg.LightningModule):
     def predict_step(self, batch, batch_idx):
         (image, tags, labels) = batch
         pred = self.forward((image, tags))
-        #pred = (pred > 0.5).to(torch.int64)
         pred = pred.to(torch.int64)
         return tag_transform.decode(pred)
 
     def test_step(self, batch, batch_idx):
         (image, tags, labels) = batch
         pred = self.forward((image, tags))
-        #pred = (pred > 0.5).to(torch.int64)
         pred = pred.to(torch.int64)
         labels = labels.to(torch.int64)
         self.metrics.update(pred, labels)

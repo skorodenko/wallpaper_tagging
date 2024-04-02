@@ -1,17 +1,17 @@
 [0] Config.pm:307> INFO - This is Biber 2.19
 [0] Config.pm:310> INFO - Logfile is 'template.blg'
-[112] biber:340> INFO - === Mon Apr  1, 2024, 23:44:46
-[134] Biber.pm:419> INFO - Reading 'template.bcf'
-[225] Biber.pm:979> INFO - Found 18 citekeys in bib section 0
-[252] Biber.pm:4419> INFO - Processing section 0
-[267] Biber.pm:4610> INFO - Looking for bibtex file 'refs.bib' for section 0
-[269] bibtex.pm:1713> INFO - LaTeX decoding ...
-[292] bibtex.pm:1519> INFO - Found BibTeX data source 'refs.bib'
-[580] UCollate.pm:68> INFO - Overriding locale 'uk-UA' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[580] UCollate.pm:68> INFO - Overriding locale 'uk-UA' defaults 'variable = shifted' with 'variable = non-ignorable'
-[580] Biber.pm:4239> INFO - Sorting list 'nyt/global//global/global' of type 'entry' with template 'nyt' and locale 'uk-UA'
-[610] bbl.pm:660> INFO - Writing 'template.bbl' with encoding 'UTF-8'
-[622] bbl.pm:763> INFO - Output to template.bbl
-[623] Biber.pm:131> WARN - legacy year field 'July 8-10, 2009' in entry 'nus-wide-civr09' is not an integer - this will probably not sort properly.
-[623] Biber.pm:131> WARN - legacy month field 'June' in entry 'cnn-rnn' is not an integer - this will probably not sort properly.
-[623] Biber.pm:133> INFO - WARNINGS: 2
+[114] biber:340> INFO - === Wed Apr  3, 2024, 01:39:37
+[136] Biber.pm:419> INFO - Reading 'template.bcf'
+[237] Biber.pm:979> INFO - Found 19 citekeys in bib section 0
+[261] Biber.pm:4419> INFO - Processing section 0
+[275] Biber.pm:4610> INFO - Looking for bibtex file 'refs.bib' for section 0
+[277] bibtex.pm:1713> INFO - LaTeX decoding ...
+[301] bibtex.pm:1519> INFO - Found BibTeX data source 'refs.bib'
+[636] UCollate.pm:68> INFO - Overriding locale 'uk-UA' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[637] UCollate.pm:68> INFO - Overriding locale 'uk-UA' defaults 'variable = shifted' with 'variable = non-ignorable'
+[637] Biber.pm:4239> INFO - Sorting list 'nyt/global//global/global' of type 'entry' with template 'nyt' and locale 'uk-UA'
+[669] bbl.pm:660> INFO - Writing 'template.bbl' with encoding 'UTF-8'
+[684] bbl.pm:763> INFO - Output to template.bbl
+[684] Biber.pm:131> WARN - legacy year field 'July 8-10, 2009' in entry 'nus-wide-civr09' is not an integer - this will probably not sort properly.
+[684] Biber.pm:131> WARN - legacy month field 'June' in entry 'cnn-rnn' is not an integer - this will probably not sort properly.
+[685] Biber.pm:133> INFO - WARNINGS: 2

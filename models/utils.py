@@ -17,6 +17,20 @@ nlabels_f32 = transforms.Compose([
     transforms.Lambda(lambda x: x.unsqueeze(1)),
 ])
 
+# Calculated in eda.ipynb
+LAB_MEAN = 2.4186057952477
+LAB_STD = 1.5880828167376047
+
+nlabels_normalize = transforms.Compose([
+    transforms.Lambda(lambda x: (x - LAB_MEAN) / LAB_STD)
+    #transforms.Lambda(lambda x: x / 12)
+])
+
+nlabels_denormalize = transforms.Compose([
+    #transforms.Lambda(lambda x: x * LAB_STD + LAB_MEAN)
+    transforms.Lambda(lambda x: x * LAB_STD + LAB_MEAN)
+])
+
 #f32_labels = transforms.Compose([
 #    transforms.Lambda(lambda x: x * 81),
 #])

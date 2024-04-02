@@ -9,6 +9,10 @@
 \contentsline {section}{\numberline {3.1}VCNN}{8}{section.3.1}%
 \contentsline {section}{\numberline {3.2}MLP}{9}{section.3.2}%
 \contentsline {section}{\numberline {3.3}LP}{9}{section.3.3}%
-\contentsline {section}{\numberline {3.4}LQP}{9}{section.3.4}%
-\contentsline {chapter}{Висновки}{10}{chapter*.8}%
-\contentsline {chapter}{Перелік посилань}{11}{chapter*.9}%
+\contentsline {section}{\numberline {3.4}LQP}{10}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Процес тренування}{10}{section.3.5}%
+\contentsline {paragraph}{\textbf {Тренування VCNN}\\}{10}{paragraph*.8}%
+\contentsline {section}{\numberline {3.6}Процес тестування}{11}{section.3.6}%
+\contentsline {chapter}{Висновки}{12}{chapter*.9}%
+\contentsline {chapter}{Перелік посилань}{13}{chapter*.10}%
+\contentsline {chapter}{Додаток А\ Код лістинг}{15}{chapter*.10}%

@@ -22,6 +22,7 @@ trainer = lg.Trainer(
     logger=CSVLogger(ROOT_DIR, "logs", version=0),
     limit_train_batches = 0.1,
     limit_val_batches = 0.1,
+    check_val_every_n_epoch = 5,
     callbacks=[
         ModelSummary(2),
         LearningRateMonitor(logging_interval = "step"),
@@ -43,7 +44,7 @@ mlp = MLP.load_from_checkpoint("./assets/trained_models/mlp.train/mlp.ckpt")
 mlp.freeze()
 
 model = LQP(
-    lr = 0.0001,
+    lr = 0.001,
     weight_decay=0.0003,
     models={"vcnn": vcnn, "mlp": mlp}
 )

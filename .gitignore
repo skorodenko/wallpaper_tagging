@@ -166,3 +166,5 @@ cython_debug/
 *.bcf
 doc/template.run.xml
 doc/template.synctex.gz
+*.blg
+*.blg

@@ -2,7 +2,7 @@ import torch
 import lightning as lg
 from .vcnn import VCNN
 from .mlp import MLP
-from .utils import nlabels_f32
+from .utils import nlabels_f32, nlabels_normalize, nlabels_denormalize
 
 
 
@@ -17,8 +17,10 @@ class LQP(lg.LightningModule):
         self.fc = torch.nn.Sequential(
             torch.nn.Linear(81 * 2, 512),
             torch.nn.ReLU(inplace=True),
+            torch.nn.Dropout(),
             torch.nn.Linear(512, 256),
             torch.nn.ReLU(inplace=True),
+            torch.nn.Dropout(),
             torch.nn.Linear(256, 1),
         )
         self.loss_module = torch.nn.MSELoss()
@@ -31,13 +33,14 @@ class LQP(lg.LightningModule):
         )
         scheduler = torch.optim.lr_scheduler.MultiStepLR(
             optimizer,
-            milestones=[5,10], 
-            gamma=0.5,
+            milestones=[10,15], 
+            gamma=0.25,
         )
         return [optimizer], [{"scheduler": scheduler, "interval": "epoch"}]
     
     def predict(self, x):
         x = self.fc(x)
+        x = nlabels_denormalize(x)
         return x
     
     def forward(self, x):
@@ -52,6 +55,7 @@ class LQP(lg.LightningModule):
         (image, tags, labels) = batch
         pred = self.forward((image, tags))
         f_labels = nlabels_f32(labels)
+        f_labels = nlabels_normalize(f_labels)
         loss = self.loss_module(pred, f_labels)
         self.log("train_loss", loss, on_step=True, prog_bar=True)
         return loss
@@ -60,6 +64,7 @@ class LQP(lg.LightningModule):
         (image, tags, labels) = batch
         pred = self.forward((image, tags))
         f_labels = nlabels_f32(labels)
+        f_labels = nlabels_normalize(f_labels)
         loss = self.loss_module(pred, f_labels)
         self.log("val_loss", loss, prog_bar=True)
     
