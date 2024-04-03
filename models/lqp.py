@@ -31,12 +31,7 @@ class LQP(lg.LightningModule):
             lr = self.hparams.lr,
             weight_decay = self.hparams.weight_decay,
         )
-        scheduler = torch.optim.lr_scheduler.MultiStepLR(
-            optimizer,
-            milestones=[10,15], 
-            gamma=0.25,
-        )
-        return [optimizer], [{"scheduler": scheduler, "interval": "epoch"}]
+        return optimizer
     
     def predict(self, x):
         x = self.fc(x)

@@ -35,7 +35,7 @@ trainer = lg.Trainer(
 )
 
 model = MLP(
-    lr = 0.0001,
+    lr = 0.001,
     weight_decay=0.0003,
 )
 

@@ -5,19 +5,21 @@ from pathlib import Path
 from torchvision.io import read_image
 
 
+# Change these lines
 IMAGE_ROOT = "./assets/nus-wide/images"
 OUTPUT = "./assets/preprocessed/Test_nus-wide.ndjson"
 IMAGES = "./assets/nus-wide/TestImagelist.txt"
 TAGS_1K = "./assets/nus-wide/Test_Tags1k.dat"
 
-
+# Change this line
 LABEL_FILES = glob.glob(r"./assets/nus-wide/src/Groundtruth/*_Test.txt")
+
 IMAGE_FILES = glob.glob(r"*.*", root_dir=IMAGE_ROOT)
 
 LABEL_FILES.sort()
 
 header_1k = pl.read_csv("./assets/nus-wide/TagList1k.txt", has_header=False)["column_1"].to_list()
-header_81 = pl.read_csv("./assets/nus-wide/TagList81.txt", has_header=False)["column_1"].to_list()
+header_81 = pl.read_csv("./assets/nus-wide/Concepts81.txt", has_header=False)["column_1"].to_list()
 
 tags_1k = pl.scan_csv(
     TAGS_1K, 
