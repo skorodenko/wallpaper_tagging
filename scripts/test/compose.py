@@ -22,7 +22,7 @@ trainer = lg.Trainer(
 
 model = Model()
 load_model(model, ROOT_DIR / "compose.safetensors", strict=False)
-model.eval()
+model.freeze()
 
 if __name__ == "__main__":
     with torch.no_grad():

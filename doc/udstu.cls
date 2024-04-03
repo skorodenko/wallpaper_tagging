@@ -21,10 +21,12 @@
 \newfontfamily{\cyrillicfontsf}{Iosevka Nerd Font}
 
 \RequirePackage{amsmath}
+\RequirePackage{amsfonts}
 
 % графічні пакети
 \RequirePackage{graphicx} % основний пакет для вставки графіки
 \RequirePackage{subcaption}
+\RequirePackage{booktabs}
 \RequirePackage[section]{placeins}
 \RequirePackage{flafter} % пакет гарантує, що рисунок чи таблиця ніколи не з'являться раніше посилання на самих себе
 % \RequirePackage{caption} % пакет для персоналізації заголовків рисунків та таблиць
