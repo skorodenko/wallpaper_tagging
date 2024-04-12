@@ -12,7 +12,7 @@ ROOT_DIR = TRAINED_MODELS / "vcnn.train"
 CKPT_PATH = TRAINED_MODELS / "vcnn.train" / "vcnn.ckpt"
 
 
-data = DataModule(batch_size = 32, prefetch_factor = 16, num_workers = 6)
+data = DataModule(batch_size = 16, prefetch_factor = 16, num_workers = 6)
 
 trainer = lg.Trainer(
     devices = 1,
@@ -22,10 +22,11 @@ trainer = lg.Trainer(
     logger = CSVLogger(ROOT_DIR, "logs", version=0),
     limit_train_batches = 0.1,
     limit_val_batches = 0.1,
+    accumulate_grad_batches = 2,
     callbacks = [
         ModelSummary(2),
         LearningRateMonitor(logging_interval = "step"),
-        FEFinetune(freeze_only=True),
+        FEFinetune(2),
         ModelCheckpoint(
             monitor="H_F1",
             mode="max",
