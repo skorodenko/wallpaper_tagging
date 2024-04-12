@@ -163,7 +163,7 @@ class TagTransform:
         for i, (_class, _len) in enumerate(zip(sort_cls, clen)):
             iones = _class[:_len]
             cls[i] = torch.zeros_like(cls[i])
-            cls[i] = cls[i].put(iones, torch.ones(len(iones), device="cuda:0"))
+            cls[i] = cls[i].put(iones, torch.ones(len(iones), device=cls.device))
         return cls
 
 
