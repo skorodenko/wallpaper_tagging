@@ -181,5 +181,6 @@ class FEFinetune(BaseFinetuning):
             self.unfreeze_and_add_param_group(
                 modules=pl_module.feature_extractor,
                 optimizer=optimizer,
+                initial_denom_lr=1,
                 train_bn=False,
             )
