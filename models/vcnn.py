@@ -3,7 +3,7 @@ import torch.nn as nn
 import torchvision
 import lightning as lg
 from torch import Tensor
-from models.utils import Metrics, TagTransform, nlabels_f32
+from models.utils import Metrics, TagTransform
 
 
 label_transform = TagTransform("./assets/preprocessed/Labels_nus-wide.ndjson")

@@ -59,10 +59,8 @@ class MLP(lg.LightningModule):
         (_, tags, labels) = batch
         pred = self.forward(tags)
         loss = self.loss_module(pred, labels)
-        topn = nlabels_f32(labels)
         labels = labels.to(torch.int64)
-        topn = topn.to(torch.int64)
-        pred = label_transform.decode_topn(pred, topn)
+        pred = label_transform.decode_topn(pred, torch.tensor([3] * pred.shape[1]))
         pred = pred.to(torch.int64)
         self.metrics.update(pred, labels)
         self.log("val_loss", loss, prog_bar=True)
