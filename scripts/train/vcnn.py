@@ -20,8 +20,8 @@ trainer = lg.Trainer(
     precision = "bf16-mixed",
     default_root_dir = ROOT_DIR,
     logger = CSVLogger(ROOT_DIR, "logs", version=0),
-    limit_train_batches = 0.1,
-    limit_val_batches = 0.1,
+    limit_train_batches = 0.2,
+    limit_val_batches = 0.2,
     callbacks = [
         ModelSummary(2),
         LearningRateMonitor(logging_interval = "step"),
