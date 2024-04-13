@@ -42,6 +42,7 @@ class VCNN(lg.LightningModule):
             filter(lambda p: p.requires_grad, self.parameters()),
             lr = self.hparams.lr,
             weight_decay = self.hparams.weight_decay,
+            momentum = 0.9,
         )
         scheduler = torch.optim.lr_scheduler.MultiStepLR(
             optimizer,
