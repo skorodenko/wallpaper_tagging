@@ -19,6 +19,7 @@ trainer = lg.Trainer(
     devices=1,
     max_epochs=30,
     accelerator="gpu",
+    precision = "bf16-mixed",
     default_root_dir = ROOT_DIR,
     logger=CSVLogger(ROOT_DIR, "logs", version=0),
     limit_train_batches = 0.1,
@@ -44,7 +45,7 @@ mlp = MLP.load_from_checkpoint("./assets/trained_models/mlp.train/mlp.ckpt")
 mlp.freeze()
 
 model = LP(
-    lr = 0.01,
+    lr = 0.001,
     weight_decay=0.0003,
     models = {"vcnn": vcnn, "mlp": mlp}
 )
