@@ -1,7 +1,7 @@
 import torch
 import lightning as lg
 from torch import Tensor
-from models.utils import Metrics, TagTransform, nlabels_f32
+from models.utils import Metrics, TagTransform
 
 
 label_transform = TagTransform("./assets/preprocessed/Labels_nus-wide.ndjson")
@@ -34,7 +34,7 @@ class MLP(lg.LightningModule):
         scheduler = torch.optim.lr_scheduler.MultiStepLR(
             optimizer,
             milestones=[5,10], 
-            gamma=0.5
+            gamma=0.1
         )
         return [optimizer], [{"scheduler": scheduler, "interval": "epoch"}]
     
