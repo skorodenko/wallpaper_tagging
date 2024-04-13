@@ -15,15 +15,20 @@ data = DataModule(batch_size=32, num_workers=6)
 trainer = lg.Trainer(
     devices=1,
     accelerator="gpu",
-    limit_test_batches=1.0,
+    limit_test_batches=0.1,
     default_root_dir = ROOT_DIR,
     logger=CSVLogger(ROOT_DIR, "logs", version=0),
 )
 
-model = Model()
-load_model(model, ROOT_DIR / "compose.safetensors", strict=False)
-model.freeze()
+
+def compose_model(**kwargs):
+    model = Model(**kwargs)
+    load_model(model, ROOT_DIR / "compose.safetensors", strict=False)
+    model.freeze()
+    return model
+
 
 if __name__ == "__main__":
+    model = compose_model()
     with torch.no_grad():
         trainer.test(model, datamodule=data) 

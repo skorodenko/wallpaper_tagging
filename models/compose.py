@@ -1,5 +1,7 @@
+import os
 import torch
 import lightning as lg
+from torch import Tensor
 from models.lp import LP
 from models.mlp import MLP
 from models.lqp import LQP
@@ -12,38 +14,33 @@ label_transform = TagTransform("./assets/preprocessed/Labels_nus-wide.ndjson")
 
 class Model(lg.LightningModule):
     
-    def __init__(self, models: dict = None, mode: str = "vcnn+mlp+lp+lqp"):
+    def __init__(self, mode: str = "vcnn+mlp+lp+lqp", topk: int = 3):
         super().__init__()
         self.mode = mode
-        if models:
-            self.vcnn = models["vcnn"]
-            self.mlp = models["mlp"]
-            self.lp = models["lp"]
-            self.lqp = models["lqp"]
-        else:
-            self.vcnn = VCNN()
-            self.mlp = MLP()
-            self.lp = LP()
-            self.lqp = LQP()
+        self.topk = topk
+        self.vcnn = VCNN()
+        self.mlp = MLP()
+        self.lp = LP()
+        self.lqp = LQP()
         self.metrics = Metrics(81)
     
-    def test_vcnn(self, x):
+    def test_vcnn(self, x: Tensor, k: int = 3):
         image, _ = x
         pred = self.vcnn.predict(image)
-        pred_topn = label_transform.decode_topn(pred, torch.tensor([3] * pred.shape[1]))
+        pred_topn = label_transform.decode_topn(pred, torch.tensor([k] * pred.shape[1]))
         return pred_topn
 
-    def test_vcnn_mlp_lp(self, x):
+    def test_vcnn_mlp_lp(self, x: Tensor, k: int = 3):
         image, tags = x
         f_vis = self.vcnn.predict(image)
         f_text = self.mlp.predict(tags)
         f = torch.cat((f_vis, f_text), 1)
         pred = self.lp.predict(f)
-        pred_topn = label_transform.decode_topn(pred, torch.tensor([3] * pred.shape[1]))
+        pred_topn = label_transform.decode_topn(pred, torch.tensor([k] * pred.shape[1]))
         return pred_topn
     
-    def test_vcnn_lqp(self, x):
-        image, tags = x
+    def test_vcnn_lqp(self, x: Tensor):
+        image, _ = x
         f_vis = self.vcnn.predict(image)
         f_text = torch.zeros_like(f_vis)
         f = torch.cat((f_vis, f_text), 1)
@@ -53,7 +50,7 @@ class Model(lg.LightningModule):
         pred_topn = label_transform.decode_topn(pred, number)
         return pred_topn
     
-    def test_vcnn_mlp_lp_lqp(self, x):
+    def test_vcnn_mlp_lp_lqp(self, x: Tensor):
         image, tags = x
         f_vis = self.vcnn.predict(image)
         f_text = self.mlp.predict(tags)
@@ -67,16 +64,16 @@ class Model(lg.LightningModule):
     def forward(self, x):
         match self.mode:
             case "vcnn":
-                return self.test_vcnn(x)
+                return self.test_vcnn(x, k=self.topk)
             case "vcnn+lqp":
                 return self.test_vcnn_lqp(x)
             case "vcnn+mlp+lp":
-                return self.test_vcnn_mlp_lp(x)
+                return self.test_vcnn_mlp_lp(x, k=self.topk)
             case "vcnn+mlp+lp+lqp":
                 return self.test_vcnn_mlp_lp_lqp(x)
     
     def predict_step(self, batch, batch_idx):
-        (image, tags, labels) = batch
+        image, tags, _ = batch
         pred = self.forward((image, tags))
         pred = pred.to(torch.int64)
         return label_transform.decode(pred)

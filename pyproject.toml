@@ -15,7 +15,6 @@ numpy = "^1.26.4"
 polars = "^0.20.10"
 pandas = "^2.2.1"
 tqdm = "^4.66.2"
-pillow = "^10.2.0"
 safetensors = "^0.4.2"
 
 
