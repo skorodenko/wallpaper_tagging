@@ -38,11 +38,10 @@ class VCNN(lg.LightningModule):
         self.metrics = Metrics(81)
     
     def configure_optimizers(self):
-        optimizer = torch.optim.SGD(
+        optimizer = torch.optim.AdamW(
             filter(lambda p: p.requires_grad, self.parameters()),
             lr = self.hparams.lr,
             weight_decay = self.hparams.weight_decay,
-            momentum = 0.9,
         )
         scheduler = torch.optim.lr_scheduler.MultiStepLR(
             optimizer,
