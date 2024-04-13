@@ -7,7 +7,7 @@ from models.vcnn import VCNN
 from .utils import TagTransform, Metrics
 
 
-tag_transform = TagTransform("./assets/preprocessed/Labels_nus-wide.ndjson")
+label_transform = TagTransform("./assets/preprocessed/Labels_nus-wide.ndjson")
 
 
 class Model(lg.LightningModule):
@@ -27,7 +27,33 @@ class Model(lg.LightningModule):
             self.lqp = LQP()
         self.metrics = Metrics(81)
     
-    def vcnn_mlp_lp_lqp(self, x):
+    def test_vcnn(self, x):
+        image, _ = x
+        pred = self.vcnn.predict(image)
+        pred_topn = label_transform.decode_topn(pred, torch.tensor([3] * pred.shape[1]))
+        return pred_topn
+
+    def test_vcnn_mlp_lp(self, x):
+        image, tags = x
+        f_vis = self.vcnn.predict(image)
+        f_text = self.mlp.predict(tags)
+        f = torch.cat((f_vis, f_text), 1)
+        pred = self.lp.predict(f)
+        pred_topn = label_transform.decode_topn(pred, torch.tensor([3] * pred.shape[1]))
+        return pred_topn
+    
+    def test_vcnn_lqp(self, x):
+        image, tags = x
+        f_vis = self.vcnn.predict(image)
+        f_text = torch.zeros_like(f_vis)
+        f = torch.cat((f_vis, f_text), 1)
+        pred = self.lp.predict(f)
+        number = self.lqp.predict(f)
+        number = number.round().to(torch.int64)
+        pred_topn = label_transform.decode_topn(pred, number)
+        return pred_topn
+    
+    def test_vcnn_mlp_lp_lqp(self, x):
         image, tags = x
         f_vis = self.vcnn.predict(image)
         f_text = self.mlp.predict(tags)
@@ -35,21 +61,25 @@ class Model(lg.LightningModule):
         pred = self.lp.predict(f)
         number = self.lqp.predict(f)
         number = number.round().to(torch.int64)
-        pred_topn = tag_transform.decode_topn(pred, number)
+        pred_topn = label_transform.decode_topn(pred, number)
         return pred_topn
     
     def forward(self, x):
         match self.mode:
             case "vcnn":
-                return ...
+                return self.test_vcnn(x)
+            case "vcnn+lqp":
+                return self.test_vcnn_lqp(x)
+            case "vcnn+mlp+lp":
+                return self.test_vcnn_mlp_lp(x)
             case "vcnn+mlp+lp+lqp":
-                return self.vcnn_mlp_lp_lqp(x)
+                return self.test_vcnn_mlp_lp_lqp(x)
     
     def predict_step(self, batch, batch_idx):
         (image, tags, labels) = batch
         pred = self.forward((image, tags))
         pred = pred.to(torch.int64)
-        return tag_transform.decode(pred)
+        return label_transform.decode(pred)
 
     def test_step(self, batch, batch_idx):
         (image, tags, labels) = batch
