@@ -39,7 +39,7 @@ trainer = lg.Trainer(
 
 model = VCNN(
     lr = 0.001,
-    weight_decay = 0.0003,
+    weight_decay = 0.01,
 )
 
 trainer.fit(model, datamodule=data)
