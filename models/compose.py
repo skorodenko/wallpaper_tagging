@@ -12,8 +12,9 @@ tag_transform = TagTransform("./assets/preprocessed/Labels_nus-wide.ndjson")
 
 class Model(lg.LightningModule):
     
-    def __init__(self, models: dict = None):
+    def __init__(self, models: dict = None, mode: str = "vcnn+mlp+lp+lqp"):
         super().__init__()
+        self.mode = mode
         if models:
             self.vcnn = models["vcnn"]
             self.mlp = models["mlp"]
@@ -25,8 +26,8 @@ class Model(lg.LightningModule):
             self.lp = LP()
             self.lqp = LQP()
         self.metrics = Metrics(81)
-        
-    def forward(self, x):
+    
+    def vcnn_mlp_lp_lqp(self, x):
         image, tags = x
         f_vis = self.vcnn.predict(image)
         f_text = self.mlp.predict(tags)
@@ -36,6 +37,13 @@ class Model(lg.LightningModule):
         number = number.round().to(torch.int64)
         pred_topn = tag_transform.decode_topn(pred, number)
         return pred_topn
+    
+    def forward(self, x):
+        match self.mode:
+            case "vcnn":
+                return ...
+            case "vcnn+mlp+lp+lqp":
+                return self.vcnn_mlp_lp_lqp(x)
     
     def predict_step(self, batch, batch_idx):
         (image, tags, labels) = batch
