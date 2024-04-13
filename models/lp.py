@@ -2,7 +2,7 @@ import torch
 import lightning as lg
 from .vcnn import VCNN
 from .mlp import MLP
-from models.utils import Metrics, TagTransform, nlabels_f32
+from models.utils import Metrics, TagTransform
 
 
 label_transform = TagTransform("./assets/preprocessed/Labels_nus-wide.ndjson")
@@ -32,7 +32,7 @@ class LP(lg.LightningModule):
         scheduler = torch.optim.lr_scheduler.MultiStepLR(
             optimizer,
             milestones=[5,10], 
-            gamma=0.5
+            gamma=0.1
         )
         return [optimizer], [{"scheduler": scheduler, "interval": "epoch"}]
 
@@ -60,10 +60,8 @@ class LP(lg.LightningModule):
         (image, tags, labels) = batch
         pred = self.forward((image, tags))
         loss = self.loss_module(pred, labels)
-        topn = nlabels_f32(labels)
         labels = labels.to(torch.int64)
-        topn = topn.to(torch.int64)
-        pred = label_transform.decode_topn(pred, topn)
+        pred = label_transform.decode_topn(pred, torch.tensor([3] * pred.shape[1]))
         pred = pred.to(torch.int64)
         self.metrics.update(pred, labels)
         self.log("val_loss", loss, prog_bar=True)
