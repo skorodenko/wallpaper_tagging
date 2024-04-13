@@ -9,7 +9,6 @@ from collections import defaultdict
 from torchvision.transforms import v2 as transforms
 from torchtext.data.utils import get_tokenizer
 from torchtext.vocab import build_vocab_from_iterator
-from lightning.pytorch.callbacks import BaseFinetuning
 
 
 nlabels_f32 = transforms.Compose([

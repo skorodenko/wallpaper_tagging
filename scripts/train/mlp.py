@@ -17,6 +17,7 @@ trainer = lg.Trainer(
     devices=1,
     max_epochs=30,
     accelerator="gpu",
+    precision = "bf16-mixed",
     default_root_dir = ROOT_DIR,
     logger=CSVLogger(ROOT_DIR, "logs", version=0),
     callbacks=[
