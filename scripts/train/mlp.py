@@ -3,7 +3,6 @@ from data import DataModule
 from pathlib import Path
 from models.mlp import MLP
 from lightning.pytorch.loggers import CSVLogger
-from lightning.pytorch.callbacks.early_stopping import EarlyStopping
 from lightning.pytorch.callbacks import ModelCheckpoint, ModelSummary, LearningRateMonitor
 
 
@@ -24,7 +23,6 @@ trainer = lg.Trainer(
     callbacks=[
         ModelSummary(2),
         LearningRateMonitor(logging_interval = "step"),
-        EarlyStopping(monitor="val_loss", mode="min"),
         ModelCheckpoint(
             monitor="H_F1",
             mode="max",
