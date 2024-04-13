@@ -163,24 +163,5 @@ class TagTransform:
         for i, (_class, _len) in enumerate(zip(sort_cls, clen)):
             iones = _class[:_len]
             cls[i] = torch.zeros_like(cls[i])
-            cls[i] = cls[i].put(iones, torch.ones(len(iones), device=cls.device))
+            cls[i] = cls[i].put(iones, torch.ones(len(iones), device=cls.device, dtype=cls.dtype))
         return cls
-
-
-class FEFinetune(BaseFinetuning):
-    def __init__(self, unfreeze_at_epoch=10, freeze_only = False):
-        super().__init__()
-        self._unfreeze_at_epoch = unfreeze_at_epoch
-        self._freeze_only = freeze_only
-
-    def freeze_before_training(self, pl_module):
-        self.freeze(pl_module.feature_extractor, train_bn=False)
-
-    def finetune_function(self, pl_module, current_epoch, optimizer):
-        if current_epoch == self._unfreeze_at_epoch and not self._freeze_only:
-            self.unfreeze_and_add_param_group(
-                modules=pl_module.feature_extractor,
-                optimizer=optimizer,
-                initial_denom_lr=1,
-                train_bn=False,
-            )

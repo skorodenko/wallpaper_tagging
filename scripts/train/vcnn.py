@@ -18,6 +18,7 @@ trainer = lg.Trainer(
     devices = 1,
     max_epochs = 30,
     accelerator = "gpu",
+    precision = "bf16-mixed",
     default_root_dir = ROOT_DIR,
     logger = CSVLogger(ROOT_DIR, "logs", version=0),
     limit_train_batches = 0.1,
@@ -26,7 +27,6 @@ trainer = lg.Trainer(
     callbacks = [
         ModelSummary(2),
         LearningRateMonitor(logging_interval = "step"),
-        FEFinetune(2),
         ModelCheckpoint(
             monitor="H_F1",
             mode="max",
