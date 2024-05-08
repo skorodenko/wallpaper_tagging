@@ -318,45 +318,45 @@
 		\begingroup\centering % центрування
 			\setfontsize{14}
 			\MakeUppercase{Національний технічний університет України}
-			
+
 			\MakeUppercase{\guillemotleft Київський політехнічний інститут}
-			
+
 			\MakeUppercase{імені Ігоря Сікорського\guillemotright}
 
 			Факультет прикладної математики
-			
+
 			Кафедра прикладної математики
-		
+
 		\vfill
-			
+
 		\cmdWork@Title@Title
-		
+
 		\endgroup
 		\vfill
-		
+
 		\ifWork@Title@StudentMale
 			Виконав:
 		\else
 			Виконала:
 		\fi \hfill Керівник:
-		
+
 		\ifWork@Title@StudentMale
 			студент
 		\else
 			студентка
-		\fi групи \cmdWork@Title@StudentGroup  \hfill 
+		\fi групи \cmdWork@Title@StudentGroup  \hfill
 		\ifundef{\cmdWork@Title@SupervisorDegree}{\relax}%
 				{\cmdWork@Title@SupervisorDegree}
-				
+
 	 	\cmdWork@Title@StudentName \hfill 	\cmdWork@Title@SupervisorName
-		
+
 		\vfill
-		
+
 		\begingroup\centering
 			Київ --- \the\year
-			
+
 		\endgroup
-		
+
 		\clearpage % починаємо з нової сторінки
 
 		\setcounter{page}{2} % номер сторінки буде 2
@@ -364,13 +364,118 @@
 		\pagestyle{plain}
 
 		\setlength{\parindent}{1.25cm} % задаємо відступ першого рядка абзацу (5 знаків, або 1,25 см)
-		
+
 		% пропуск рядка до та після формули
 		\setlength{\belowdisplayskip}{21pt}
 		\setlength{\abovedisplayskip}{21pt}
 		\setlength{\belowdisplayshortskip}{21pt}
 		\setlength{\abovedisplayshortskip}{21pt}
 }
+
+
+\define@cmdkey[Work]{Title}{Department}{}
+\define@cmdkey[Work]{Title}{HeadOfDepartment}{}
+\define@cmdkey[Work]{Title}{ConsultDegree}{}
+\define@cmdkey[Work]{Title}{ConsultName}{}
+\newcommand{\makediplomatitle}[1]{
+	  \setkeys[Work]{Title}{#1}
+	  \thispagestyle{empty}
+	  \setlength{\parindent}{0cm}
+		\begingroup\centering % центрування
+			\setfontsize{14}
+			\MakeUppercase{Національний технічний університет України}
+
+			\MakeUppercase{\guillemotleft Київський політехнічний інститут}
+
+			\MakeUppercase{імені Ігоря Сікорського\guillemotright}
+
+			Факультет прикладної математики
+
+			Кафедра прикладної математики
+
+		%\vfill
+
+		\hfill \invcommas{До захисту допущено}
+
+		\hfill Завідувач кафедри \cmdWork@Title@Department
+
+		\hfill \cmdWork@Title@HeadOfDepartment
+
+		\hfill \invcommas{\_\_\_} \_\_\_\_\_\_\_\_\_\_ \the\year
+
+		%\vfill
+
+		\cmdWork@Title@Title
+
+		\endgroup
+		%\vfill
+
+		\hspace{1cm}
+
+		\begin{onehalfspacing}
+
+		\ifWork@Title@StudentMale
+			Виконав:
+		\else
+			Виконала:
+		\fi
+
+		\ifWork@Title@StudentMale
+			студент
+		\else
+			студентка
+		\fi IV курсу, групи \cmdWork@Title@StudentGroup
+
+	 	\cmdWork@Title@StudentName \hfill 	\_\_\_\_\_\_\_\_\_\_
+
+		\end{onehalfspacing}
+
+		\hspace{1cm}
+
+		\begin{onehalfspacing}
+
+	 	Керівник:
+
+		\cmdWork@Title@SupervisorDegree
+
+		\cmdWork@Title@SupervisorName \hfill 	\_\_\_\_\_\_\_\_\_\_
+
+		\end{onehalfspacing}
+
+		\hspace{1cm}
+
+		\begin{onehalfspacing}
+
+		Консультант з нормоконтролю:
+
+		\cmdWork@Title@ConsultDegree
+
+		\cmdWork@Title@ConsultName \hfill 	\_\_\_\_\_\_\_\_\_\_
+
+		\end{onehalfspacing}
+
+		\vfill
+
+		\begingroup\centering
+			Київ --- \the\year
+
+		\endgroup
+
+		\clearpage % починаємо з нової сторінки
+
+		\setcounter{page}{2} % номер сторінки буде 2
+
+		\pagestyle{plain}
+
+		\setlength{\parindent}{1.25cm} % задаємо відступ першого рядка абзацу (5 знаків, або 1,25 см)
+
+		% пропуск рядка до та після формули
+		\setlength{\belowdisplayskip}{21pt}
+		\setlength{\abovedisplayskip}{21pt}
+		\setlength{\belowdisplayshortskip}{21pt}
+		\setlength{\abovedisplayshortskip}{21pt}
+}
+
 \makeatother
 
 % виправляємо помилки з апострофами в формулах

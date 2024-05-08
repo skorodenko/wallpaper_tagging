@@ -1,59 +1,283 @@
-@article{dnn-cls,
-  author = {Dan Cireşan and Ueli Meier and Juergen Schmidhuber},
-  title = {Multi-column Deep Neural Networks for Image Classification},
-  year = {2012},
-  archivePrefix = {arXiv},
-  eprint = {1202.2745},
-  howpublished = {CVPR 2012, p. 3642-3649},
+@ARTICLE{dnn-cls,
+  title         = "Multi-column deep neural networks for image classification",
+  author        = "Cire{\c s}an, Dan and Meier, Ueli and Schmidhuber, Juergen",
+  abstract      = "Traditional methods of computer vision and machine learning
+                   cannot match human performance on tasks such as the
+                   recognition of handwritten digits or traffic signs. Our
+                   biologically plausible deep artificial neural network
+                   architectures can. Small (often minimal) receptive fields of
+                   convolutional winner-take-all neurons yield large network
+                   depth, resulting in roughly as many sparsely connected
+                   neural layers as found in mammals between retina and visual
+                   cortex. Only winner neurons are trained. Several deep neural
+                   columns become experts on inputs preprocessed in different
+                   ways; their predictions are averaged. Graphics cards allow
+                   for fast training. On the very competitive MNIST handwriting
+                   benchmark, our method is the first to achieve near-human
+                   performance. On a traffic sign recognition benchmark it
+                   outperforms humans by a factor of two. We also improve the
+                   state-of-the-art on a plethora of common image
+                   classification benchmarks.",
+  month         =  feb,
+  year          =  2012,
+  copyright     = "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  archivePrefix = "arXiv",
+  primaryClass  = "cs.CV",
+  eprint        = "1202.2745"
 }
 
-@misc{cnn-cls-1,
-  author = {Karen Simonyan and Andrew Zisserman},
-  title = {Very Deep Convolutional Networks for Large-Scale Image Recognition},
-  year = {2014},
-  eprint = {arXiv:1409.1556},
+@ARTICLE{cnn-cls-1,
+  title         = "Very deep convolutional networks for large-scale image
+                   recognition",
+  author        = "Simonyan, Karen and Zisserman, Andrew",
+  abstract      = "In this work we investigate the effect of the convolutional
+                   network depth on its accuracy in the large-scale image
+                   recognition setting. Our main contribution is a thorough
+                   evaluation of networks of increasing depth using an
+                   architecture with very small (3x3) convolution filters,
+                   which shows that a significant improvement on the prior-art
+                   configurations can be achieved by pushing the depth to 16-19
+                   weight layers. These findings were the basis of our ImageNet
+                   Challenge 2014 submission, where our team secured the first
+                   and the second places in the localisation and classification
+                   tracks respectively. We also show that our representations
+                   generalise well to other datasets, where they achieve
+                   state-of-the-art results. We have made our two
+                   best-performing ConvNet models publicly available to
+                   facilitate further research on the use of deep visual
+                   representations in computer vision.",
+  month         =  sep,
+  year          =  2014,
+  copyright     = "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  archivePrefix = "arXiv",
+  primaryClass  = "cs.CV",
+  eprint        = "1409.1556"
 }
 
-@misc{cnn-cls-2,
-  author = {Keiron O'Shea and Ryan Nash},
-  title = {An Introduction to Convolutional Neural Networks},
-  year = {2015},
-  eprint = {arXiv:1511.08458},
+
+@ARTICLE{cnn-cls-2,
+  title         = "An Introduction to Convolutional Neural Networks",
+  author        = "O'Shea, Keiron and Nash, Ryan",
+  abstract      = "The field of machine learning has taken a dramatic twist in
+                   recent times, with the rise of the Artificial Neural Network
+                   (ANN). These biologically inspired computational models are
+                   able to far exceed the performance of previous forms of
+                   artificial intelligence in common machine learning tasks.
+                   One of the most impressive forms of ANN architecture is that
+                   of the Convolutional Neural Network (CNN). CNNs are
+                   primarily used to solve difficult image-driven pattern
+                   recognition tasks and with their precise yet simple
+                   architecture, offers a simplified method of getting started
+                   with ANNs. This document provides a brief introduction to
+                   CNNs, discussing recently published papers and newly formed
+                   techniques in developing these brilliantly fantastic image
+                   recognition models. This introduction assumes you are
+                   familiar with the fundamentals of ANNs and machine learning.",
+  month         =  nov,
+  year          =  2015,
+  copyright     = "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  archivePrefix = "arXiv",
+  primaryClass  = "cs.NE",
+  eprint        = "1511.08458"
 }
 
-@misc{cnn-semantic-1,
-  author = {Hexiang Hu and Guang-Tong Zhou and Zhiwei Deng and Zicheng Liao and Greg Mori},
-  title = {Learning Structured Inference Neural Networks with Label Relations},
-  year = {2016},
-  howpublished = {CVPR 2016},
+
+@ARTICLE{cnn-sinn,
+  title         = "Learning structured inference neural networks with label
+                   relations",
+  author        = "Hu, Hexiang and Zhou, Guang-Tong and Deng, Zhiwei and Liao,
+                   Zicheng and Mori, Greg",
+  abstract      = "Images of scenes have various objects as well as abundant
+                   attributes, and diverse levels of visual categorization are
+                   possible. A natural image could be assigned with
+                   fine-grained labels that describe major components,
+                   coarse-grained labels that depict high level abstraction or
+                   a set of labels that reveal attributes. Such categorization
+                   at different concept layers can be modeled with label graphs
+                   encoding label information. In this paper, we exploit this
+                   rich information with a state-of-art deep learning
+                   framework, and propose a generic structured model that
+                   leverages diverse label relations to improve image
+                   classification performance. Our approach employs a novel
+                   stacked label prediction neural network, capturing both
+                   inter-level and intra-level label semantics. We evaluate our
+                   method on benchmark image datasets, and empirical results
+                   illustrate the efficacy of our model.",
+  month         =  nov,
+  year          =  2015,
+  copyright     = "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  archivePrefix = "arXiv",
+  primaryClass  = "cs.CV",
+  eprint        = "1511.05616"
 }
 
-@misc{cnn-semantic-2,
-  Author = {Qing Li and Xiaojiang Peng and Yu Qiao and Qiang Peng},
-  Title = {Learning Category Correlations for Multi-label Image Recognition with Graph Networks},
-  Year = {2019},
-  Eprint = {arXiv:1909.13005},
+@ARTICLE{cnn-neighbors,
+  title         = "Love thy neighbors: Image annotation by exploiting image
+                   metadata",
+  author        = "Johnson, Justin and Ballan, Lamberto and Li, Fei-Fei",
+  abstract      = "Some images that are difficult to recognize on their own may
+                   become more clear in the context of a neighborhood of
+                   related images with similar social-network metadata. We
+                   build on this intuition to improve multilabel image
+                   annotation. Our model uses image metadata nonparametrically
+                   to generate neighborhoods of related images using Jaccard
+                   similarities, then uses a deep neural network to blend
+                   visual information from the image and its neighbors. Prior
+                   work typically models image metadata parametrically, in
+                   contrast, our nonparametric treatment allows our model to
+                   perform well even when the vocabulary of metadata changes
+                   between training and testing. We perform comprehensive
+                   experiments on the NUS-WIDE dataset, where we show that our
+                   model outperforms state-of-the-art methods for multilabel
+                   image annotation even when our model is forced to generalize
+                   to new types of metadata.",
+  month         =  aug,
+  year          =  2015,
+  copyright     = "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  archivePrefix = "arXiv",
+  primaryClass  = "cs.CV",
+  eprint        = "1508.07647"
 }
 
-@misc{cnn-side-1,
-  Author = {Justin Johnson and Lamberto Ballan and Li Fei-Fei},
-  Title = {Love Thy Neighbors: Image Annotation by Exploiting Image Metadata},
-  Year = {2015},
-  howpublished = {ICCV 2015}
+@ARTICLE{cnn-location,
+  title         = "Improving image classification with location context",
+  author        = "Tang, Kevin and Paluri, Manohar and Fei-Fei, Li and Fergus,
+                   Rob and Bourdev, Lubomir",
+  abstract      = "With the widespread availability of cellphones and cameras
+                   that have GPS capabilities, it is common for images being
+                   uploaded to the Internet today to have GPS coordinates
+                   associated with them. In addition to research that tries to
+                   predict GPS coordinates from visual features, this also
+                   opens up the door to problems that are conditioned on the
+                   availability of GPS coordinates. In this work, we tackle the
+                   problem of performing image classification with location
+                   context, in which we are given the GPS coordinates for
+                   images in both the train and test phases. We explore
+                   different ways of encoding and extracting features from the
+                   GPS coordinates, and show how to naturally incorporate these
+                   features into a Convolutional Neural Network (CNN), the
+                   current state-of-the-art for most image classification and
+                   recognition problems. We also show how it is possible to
+                   simultaneously learn the optimal pooling radii for a subset
+                   of our features within the CNN framework. To evaluate our
+                   model and to help promote research in this area, we identify
+                   a set of location-sensitive concepts and annotate a subset
+                   of the Yahoo Flickr Creative Commons 100M dataset that has
+                   GPS coordinates with these concepts, which we make publicly
+                   available. By leveraging location context, we are able to
+                   achieve almost a 7\% gain in mean average precision.",
+  month         =  may,
+  year          =  2015,
+  copyright     = "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  archivePrefix = "arXiv",
+  primaryClass  = "cs.CV",
+  eprint        = "1505.03873"
 }
 
-@misc{cnn-side-2,
-  Author = {Fengtao Zhou and Sheng Huang and Yun Xing},
-  Title = {Deep Semantic Dictionary Learning for Multi-label Image Classification},
-  Year = {2021},
-  howpublished = {AAAI 2021}
+@ARTICLE{cpsd,
+  title         = "Boosting multi-Label Image Classification with complementary
+                   Parallel Self-distillation",
+  author        = "Xu, Jiazhi and Huang, Sheng and Zhou, Fengtao and Huangfu,
+                   Luwen and Zeng, Daniel and Liu, Bo",
+  abstract      = "Multi-Label Image Classification (MLIC) approaches usually
+                   exploit label correlations to achieve good performance.
+                   However, emphasizing correlation like co-occurrence may
+                   overlook discriminative features of the target itself and
+                   lead to model overfitting, thus undermining the performance.
+                   In this study, we propose a generic framework named Parallel
+                   Self-Distillation (PSD) for boosting MLIC models. PSD
+                   decomposes the original MLIC task into several simpler MLIC
+                   sub-tasks via two elaborated complementary task
+                   decomposition strategies named Co-occurrence Graph Partition
+                   (CGP) and Dis-occurrence Graph Partition (DGP). Then, the
+                   MLIC models of fewer categories are trained with these
+                   sub-tasks in parallel for respectively learning the joint
+                   patterns and the category-specific patterns of labels.
+                   Finally, knowledge distillation is leveraged to learn a
+                   compact global ensemble of full categories with these
+                   learned patterns for reconciling the label correlation
+                   exploitation and model overfitting. Extensive results on
+                   MS-COCO and NUS-WIDE datasets demonstrate that our framework
+                   can be easily plugged into many MLIC approaches and improve
+                   performances of recent state-of-the-art approaches. The
+                   explainable visual study also further validates that our
+                   method is able to learn both the category-specific and
+                   co-occurring features. The source code is released at
+                   https://github.com/Robbie-Xu/CPSD.",
+  month         =  may,
+  year          =  2022,
+  copyright     = "http://creativecommons.org/licenses/by-nc-sa/4.0/",
+  archivePrefix = "arXiv",
+  primaryClass  = "cs.CV",
+  eprint        = "2205.10986"
 }
 
-@misc{cnn-side-3,
-Author = {Kevin Tang and Manohar Paluri and Li Fei-Fei and Rob Fergus and Lubomir Bourdev},
-Title = {Improving Image Classification with Location Context},
-Year = {2015},
-Eprint = {arXiv:1505.03873},
+
+@ARTICLE{q2l,
+  title         = "{Query2Label}: A Simple Transformer Way to {Multi-Label}
+                   Classification",
+  author        = "Liu, Shilong and Zhang, Lei and Yang, Xiao and Su, Hang and
+                   Zhu, Jun",
+  abstract      = "This paper presents a simple and effective approach to
+                   solving the multi-label classification problem. The proposed
+                   approach leverages Transformer decoders to query the
+                   existence of a class label. The use of Transformer is rooted
+                   in the need of extracting local discriminative features
+                   adaptively for different labels, which is a strongly desired
+                   property due to the existence of multiple objects in one
+                   image. The built-in cross-attention module in the
+                   Transformer decoder offers an effective way to use label
+                   embeddings as queries to probe and pool class-related
+                   features from a feature map computed by a vision backbone
+                   for subsequent binary classifications. Compared with prior
+                   works, the new framework is simple, using standard
+                   Transformers and vision backbones, and effective,
+                   consistently outperforming all previous works on five
+                   multi-label classification data sets, including MS-COCO,
+                   PASCAL VOC, NUS-WIDE, and Visual Genome. Particularly, we
+                   establish $91.3\%$ mAP on MS-COCO. We hope its compact
+                   structure, simple implementation, and superior performance
+                   serve as a strong baseline for multi-label classification
+                   tasks and future studies. The code will be available soon at
+                   https://github.com/SlongLiu/query2labels.",
+  month         =  jul,
+  year          =  2021,
+  copyright     = "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  archivePrefix = "arXiv",
+  primaryClass  = "cs.CV",
+  eprint        = "2107.10834"
+}
+
+@ARTICLE{cma,
+  title         = "Cross-modality attention with semantic graph embedding for
+                   multi-label classification",
+  author        = "You, Renchun and Guo, Zhiyao and Cui, Lei and Long, Xiang
+                   and Bao, Yingze and Wen, Shilei",
+  abstract      = "Multi-label image and video classification are fundamental
+                   yet challenging tasks in computer vision. The main
+                   challenges lie in capturing spatial or temporal dependencies
+                   between labels and discovering the locations of
+                   discriminative features for each class. In order to overcome
+                   these challenges, we propose to use cross-modality attention
+                   with semantic graph embedding for multi label
+                   classification. Based on the constructed label graph, we
+                   propose an adjacency-based similarity graph embedding method
+                   to learn semantic label embeddings, which explicitly exploit
+                   label relationships. Then our novel cross-modality attention
+                   maps are generated with the guidance of learned label
+                   embeddings. Experiments on two multi-label image
+                   classification datasets (MS-COCO and NUS-WIDE) show our
+                   method outperforms other existing state-of-the-arts. In
+                   addition, we validate our method on a large multi-label
+                   video classification dataset (YouTube-8M Segments) and the
+                   evaluation results demonstrate the generalization capability
+                   of our method.",
+  month         =  dec,
+  year          =  2019,
+  copyright     = "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  archivePrefix = "arXiv",
+  primaryClass  = "cs.CV",
+  eprint        = "1912.07872"
 }
 
 @ARTICLE{srn,
@@ -127,19 +351,72 @@ Eprint = {arXiv:1505.03873},
 }
 
 
-@InProceedings{cnn-rnn,
-author = {Wei Wang and Jiang and Yang and Yi and Mao and Junhua and Huang and Zhiheng and Huang and Chang and Xu},
-title = {CNN-RNN: A Unified Framework for Multi-Label Image Classification},
-booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
-month = {June},
-year = {2016}
+@ARTICLE{cnn-rnn,
+  title         = "{CNN-RNN}: A unified framework for multi-label image
+                   classification",
+  author        = "Wang, Jiang and Yang, Yi and Mao, Junhua and Huang, Zhiheng
+                   and Huang, Chang and Xu, Wei",
+  abstract      = "While deep convolutional neural networks (CNNs) have shown a
+                   great success in single-label image classification, it is
+                   important to note that real world images generally contain
+                   multiple labels, which could correspond to different
+                   objects, scenes, actions and attributes in an image.
+                   Traditional approaches to multi-label image classification
+                   learn independent classifiers for each category and employ
+                   ranking or thresholding on the classification results. These
+                   techniques, although working well, fail to explicitly
+                   exploit the label dependencies in an image. In this paper,
+                   we utilize recurrent neural networks (RNNs) to address this
+                   problem. Combined with CNNs, the proposed CNN-RNN framework
+                   learns a joint image-label embedding to characterize the
+                   semantic label dependency as well as the image-label
+                   relevance, and it can be trained end-to-end from scratch to
+                   integrate both information in a unified framework.
+                   Experimental results on public benchmark datasets
+                   demonstrate that the proposed architecture achieves better
+                   performance than the state-of-the-art multi-label
+                   classification model",
+  month         =  apr,
+  year          =  2016,
+  copyright     = "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  archivePrefix = "arXiv",
+  primaryClass  = "cs.CV",
+  eprint        = "1604.04573"
 }
 
-@misc{resnet,
-Author = {Kaiming He and Xiangyu Zhang and Shaoqing Ren and Jian Sun},
-Title = {Deep Residual Learning for Image Recognition},
-Year = {2015},
-Eprint = {arXiv:1512.03385},
+@ARTICLE{resnet,
+  title         = "Deep residual learning for image recognition",
+  author        = "He, Kaiming and Zhang, Xiangyu and Ren, Shaoqing and Sun,
+                   Jian",
+  abstract      = "Deeper neural networks are more difficult to train. We
+                   present a residual learning framework to ease the training
+                   of networks that are substantially deeper than those used
+                   previously. We explicitly reformulate the layers as learning
+                   residual functions with reference to the layer inputs,
+                   instead of learning unreferenced functions. We provide
+                   comprehensive empirical evidence showing that these residual
+                   networks are easier to optimize, and can gain accuracy from
+                   considerably increased depth. On the ImageNet dataset we
+                   evaluate residual nets with a depth of up to 152 layers---8x
+                   deeper than VGG nets but still having lower complexity. An
+                   ensemble of these residual nets achieves 3.57\% error on the
+                   ImageNet test set. This result won the 1st place on the
+                   ILSVRC 2015 classification task. We also present analysis on
+                   CIFAR-10 with 100 and 1000 layers. The depth of
+                   representations is of central importance for many visual
+                   recognition tasks. Solely due to our extremely deep
+                   representations, we obtain a 28\% relative improvement on
+                   the COCO object detection dataset. Deep residual nets are
+                   foundations of our submissions to ILSVRC \& COCO 2015
+                   competitions, where we also won the 1st places on the tasks
+                   of ImageNet detection, ImageNet localization, COCO
+                   detection, and COCO segmentation.",
+  month         =  dec,
+  year          =  2015,
+  copyright     = "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  archivePrefix = "arXiv",
+  primaryClass  = "cs.CV",
+  eprint        = "1512.03385"
 }
 
 @ARTICLE{resnext,
@@ -193,28 +470,11 @@ Year = {2014},
 Eprint = {arXiv:1409.4842},
 }
 
-@misc{cnn-labeling-1,
+@misc{cnn-labeling,
   author = {Yunchao Gong and Yangqing Jia and Thomas Leung and Alexander Toshev and Sergey Ioffe},
   title = {Deep Convolutional Ranking for Multilabel Image Annotation},
   year = {2013},
   eprint = {arXiv:1312.4894},
-}
-
-@article{cnn-labeling-2,
-Author = {Yunchao Wei and Wei Xia and Junshi Huang and Bingbing Ni and Jian Dong and Yao Zhao and Shuicheng Yan},
-Title = {CNN: Single-label to Multi-label},
-Year = {2014},
-Eprint = {arXiv:1406.5726},
-Doi = {10.1109/TPAMI.2015.2491929},
-}
-
-@inproceedings{deng2009imagenet,
-  title={Imagenet: A large-scale hierarchical image database},
-  author={Li Deng and Jia Dong and Wei Socher and Richard Li and Li-Jia Li and Kai Fei-Fei},
-  booktitle={2009 IEEE conference on computer vision and pattern recognition},
-  pages={248--255},
-  year={2009},
-  organization={Ieee}
 }
 
 @article{dropout,
@@ -226,6 +486,15 @@ Doi = {10.1109/TPAMI.2015.2491929},
   number  = {56},
   pages   = {1929--1958},
   url     = {http://jmlr.org/papers/v15/srivastava14a.html}
+}
+
+@inproceedings{deng2009imagenet,
+  title={Imagenet: A large-scale hierarchical image database},
+  author={Li Deng and Jia Dong and Wei Socher and Richard Li and Li-Jia Li and Kai Fei-Fei},
+  booktitle={2009 IEEE conference on computer vision and pattern recognition},
+  pages={248--255},
+  year={2009},
+  organization={Ieee}
 }
 
 @article{cocodataset,
@@ -250,3 +519,43 @@ Doi = {10.1109/TPAMI.2015.2491929},
   address={Santorini, Greece. },
   year={July 8-10, 2009}
 }
+
+  @ARTICLE{mixed-precision,
+  title         = "Mixed Precision Training",
+  author        = "Micikevicius, Paulius and Narang, Sharan and Alben, Jonah
+                   and Diamos, Gregory and Elsen, Erich and Garcia, David and
+                   Ginsburg, Boris and Houston, Michael and Kuchaiev, Oleksii
+                   and Venkatesh, Ganesh and Wu, Hao",
+  abstract      = "Deep neural networks have enabled progress in a wide variety
+                   of applications. Growing the size of the neural network
+                   typically results in improved accuracy. As model sizes grow,
+                   the memory and compute requirements for training these
+                   models also increases. We introduce a technique to train
+                   deep neural networks using half precision floating point
+                   numbers. In our technique, weights, activations and
+                   gradients are stored in IEEE half-precision format.
+                   Half-precision floating numbers have limited numerical range
+                   compared to single-precision numbers. We propose two
+                   techniques to handle this loss of information. Firstly, we
+                   recommend maintaining a single-precision copy of the weights
+                   that accumulates the gradients after each optimizer step.
+                   This single-precision copy is rounded to half-precision
+                   format during training. Secondly, we propose scaling the
+                   loss appropriately to handle the loss of information with
+                   half-precision gradients. We demonstrate that this approach
+                   works for a wide variety of models including convolution
+                   neural networks, recurrent neural networks and generative
+                   adversarial networks. This technique works for large scale
+                   models with more than 100 million parameters trained on
+                   large datasets. Using this approach, we can reduce the
+                   memory consumption of deep learning models by nearly 2x. In
+                   future processors, we can also expect a significant
+                   computation speedup using half-precision hardware units.",
+  month         =  oct,
+  year          =  2017,
+  copyright     = "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  archivePrefix = "arXiv",
+  primaryClass  = "cs.AI",
+  eprint        = "1710.03740"
+}
+
