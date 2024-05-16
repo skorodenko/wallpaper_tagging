@@ -15,10 +15,15 @@
 \setmainlanguage{ukrainian}
 \setotherlanguage{english}
 
-\newfontfamily{\cyrillicfont}{Iosevka Nerd Font}
-\newfontfamily{\cyrillicfontrm}{Iosevka Nerd Font}
-\newfontfamily{\cyrillicfonttt}{Iosevka Nerd Font}
-\newfontfamily{\cyrillicfontsf}{Iosevka Nerd Font}
+%\newfontfamily{\cyrillicfont}{Iosevka Nerd Font}
+%\newfontfamily{\cyrillicfontrm}{Iosevka Nerd Font}
+%\newfontfamily{\cyrillicfonttt}{Iosevka Nerd Font}
+%\newfontfamily{\cyrillicfontsf}{Iosevka Nerd Font}
+
+\newfontfamily{\cyrillicfont}{Times New Roman}
+\newfontfamily{\cyrillicfontrm}{Times New Roman}
+\newfontfamily{\cyrillicfonttt}{Times New Roman}
+\newfontfamily{\cyrillicfontsf}{Times New Roman}
 
 \RequirePackage{amsmath}
 \RequirePackage{amsfonts}
@@ -377,6 +382,116 @@
 \define@cmdkey[Work]{Title}{HeadOfDepartment}{}
 \define@cmdkey[Work]{Title}{ConsultDegree}{}
 \define@cmdkey[Work]{Title}{ConsultName}{}
+\newcommand{\makediplomapracticetitle}[1]{
+	  \setkeys[Work]{Title}{#1}
+	  \thispagestyle{empty}
+	  \setlength{\parindent}{0cm}
+		\begingroup\centering % центрування
+			\setfontsize{14}
+			\MakeUppercase{Національний технічний університет України}
+
+			\MakeUppercase{\guillemotleft Київський політехнічний інститут}
+
+			\MakeUppercase{імені Ігоря Сікорського\guillemotright}
+
+			Факультет прикладної математики
+
+			Кафедра прикладної математики
+
+
+		\vfill
+
+		\cmdWork@Title@Title
+
+		\endgroup
+		%\vfill
+
+		\hspace{0.5cm}
+
+		\begin{onehalfspacing}
+
+		\ifWork@Title@StudentMale
+			Виконав:
+		\else
+			Виконала:
+		\fi
+
+		\ifWork@Title@StudentMale
+			студент
+		\else
+			студентка
+		\fi IV курсу, групи \cmdWork@Title@StudentGroup
+
+	 	\cmdWork@Title@StudentName \ \_\_\_\_\_\_\_\_\_\_
+
+		\end{onehalfspacing}
+
+		\hspace{0.5cm}
+
+		\begin{onehalfspacing}
+
+	 	Керівник:
+
+		\cmdWork@Title@SupervisorDegree
+
+		\cmdWork@Title@SupervisorName \ \_\_\_\_\_\_\_\_\_\_
+
+		\end{onehalfspacing}
+
+		\hspace{0.5cm}
+
+		\begin{onehalfspacing}
+
+		Прийнято з оцінкою \_\_\_\_\_\_\_\_\_\_ балів \_\_\_\_\_\_\_\_\_\_
+
+		\end{onehalfspacing}
+
+		\hspace{0.5cm}
+
+		\begin{onehalfspacing}
+
+		Члени комісії: \\
+		ПІБ \_\_\_\_\_\_\_\_\_\_ \\
+		ПІБ \_\_\_\_\_\_\_\_\_\_ \\
+		ПІБ \_\_\_\_\_\_\_\_\_\_
+
+		\end{onehalfspacing}
+
+		\hspace{0.5cm}
+
+		\begin{flushright}
+		Засвідчую, що в цьому звіті немає запозичень \\
+		із праць інших авторів без відповідних посилань. \\
+		Студент \_\_\_\_\_\_\_\_\_\_
+		\end{flushright}
+
+		\vfill
+
+		\begingroup\centering
+			Київ --- \the\year
+
+		\endgroup
+
+		\clearpage % починаємо з нової сторінки
+
+		\setcounter{page}{2} % номер сторінки буде 2
+
+		\pagestyle{plain}
+
+		\setlength{\parindent}{1.25cm} % задаємо відступ першого рядка абзацу (5 знаків, або 1,25 см)
+
+		% пропуск рядка до та після формули
+		\setlength{\belowdisplayskip}{21pt}
+		\setlength{\abovedisplayskip}{21pt}
+		\setlength{\belowdisplayshortskip}{21pt}
+		\setlength{\abovedisplayshortskip}{21pt}
+}
+
+
+\define@cmdkey[Work]{Title}{Department}{}
+\define@cmdkey[Work]{Title}{HeadOfDepartment}{}
+\define@cmdkey[Work]{Title}{ConsultDegree}{}
+\define@cmdkey[Work]{Title}{ConsultName}{}
 \newcommand{\makediplomatitle}[1]{
 	  \setkeys[Work]{Title}{#1}
 	  \thispagestyle{empty}
@@ -395,13 +510,12 @@
 
 		%\vfill
 
-		\hfill \invcommas{До захисту допущено}
-
-		\hfill Завідувач кафедри \cmdWork@Title@Department
-
-		\hfill \cmdWork@Title@HeadOfDepartment
-
-		\hfill \invcommas{\_\_\_} \_\_\_\_\_\_\_\_\_\_ \the\year
+		\begin{flushright}
+		\invcommas{До захисту допущено} \\
+		Завідувач кафедри \cmdWork@Title@Department \\
+		\cmdWork@Title@HeadOfDepartment \\
+		\invcommas{\_\_\_} \_\_\_\_\_\_\_\_\_\_ \the\year
+		\end{flushright}
 
 		%\vfill
 
@@ -410,9 +524,8 @@
 		\endgroup
 		%\vfill
 
-		\hspace{1cm}
 
-		\begin{onehalfspacing}
+		\begin{singlespace}
 
 		\ifWork@Title@StudentMale
 			Виконав:
@@ -428,11 +541,10 @@
 
 	 	\cmdWork@Title@StudentName \hfill 	\_\_\_\_\_\_\_\_\_\_
 
-		\end{onehalfspacing}
+		\end{singlespace}
 
-		\hspace{1cm}
 
-		\begin{onehalfspacing}
+		\begin{singlespace}
 
 	 	Керівник:
 
@@ -440,11 +552,10 @@
 
 		\cmdWork@Title@SupervisorName \hfill 	\_\_\_\_\_\_\_\_\_\_
 
-		\end{onehalfspacing}
+		\end{singlespace}
 
-		\hspace{1cm}
 
-		\begin{onehalfspacing}
+		\begin{singlespace}
 
 		Консультант з нормоконтролю:
 
@@ -452,7 +563,13 @@
 
 		\cmdWork@Title@ConsultName \hfill 	\_\_\_\_\_\_\_\_\_\_
 
-		\end{onehalfspacing}
+		\end{singlespace}
+
+		\begin{flushright}
+		Засвідчую, що в цьому звіті немає запозичень \\
+		із праць інших авторів без відповідних посилань. \\
+		Студент \_\_\_\_\_\_\_\_\_\_
+		\end{flushright}
 
 		\vfill
 
@@ -463,7 +580,45 @@
 
 		\clearpage % починаємо з нової сторінки
 
-		\setcounter{page}{2} % номер сторінки буде 2
+      \thispagestyle{empty}
+	  \setlength{\parindent}{0cm}
+		\begingroup\centering % центрування
+			\setfontsize{14}
+			\MakeUppercase{Національний технічний університет України}
+
+			\MakeUppercase{\guillemotleft Київський політехнічний інститут}
+
+			\MakeUppercase{імені Ігоря Сікорського\guillemotright}
+
+			Факультет прикладної математики
+
+			Кафедра прикладної математики
+
+		%\vfill
+		\begin{flushleft}
+		Рівень вищої освіти - перший (бакалаврський) \\
+		Спеціальність - 113 \invcommas{Прикладна математика} \\
+		Освітньо-професійна програма \invcommas{Наука про дані та математичне моделювання} \\
+		\end{flushleft}
+
+		\begin{flushright}
+		\invcommas{Затверджую} \\
+		Завідувач кафедри \cmdWork@Title@Department \\
+		\cmdWork@Title@HeadOfDepartment \\
+		\invcommas{\_\_\_} \_\_\_\_\_\_\_\_\_\_ \the\year
+		\end{flushright}
+
+		%\vfill
+
+		{\large ЗАВДАННЯ} \\
+		на дипломну роботу \\
+		Скороденку Дмитру Олександровичу
+
+		\endgroup
+
+		%\clearpage
+
+		%\setcounter{page}{3} % номер сторінки буде 2
 
 		\pagestyle{plain}
 
