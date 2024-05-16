@@ -1,0 +1,53 @@
+\selectlanguage *[]{ukrainian}
+\contentsline {paragraph}{\textbf {Акутальність теми:}}{2}{paragraph*.2}%
+\contentsline {paragraph}{\textbf {Мета дослідження:}}{2}{paragraph*.3}%
+\contentsline {paragraph}{\textbf {Завдання дослідження:}}{2}{paragraph*.4}%
+\contentsline {paragraph}{\textbf {Об'єкт дослідження:}}{3}{paragraph*.5}%
+\contentsline {paragraph}{\textbf {Предмет дослідження:}}{3}{paragraph*.6}%
+\contentsline {paragraph}{\textbf {Кінцевий результат:}}{3}{paragraph*.7}%
+\contentsline {chapter}{Перелік умовних позначень, скорочень і термінів}{4}{chapter*.8}%
+\contentsline {chapter}{\numberline {1}Вступ}{6}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Огляд існуючих рішень}{8}{chapter.2}%
+\contentsline {paragraph}{\textbf {Базове рішення}\\}{8}{paragraph*.9}%
+\contentsline {paragraph}{\textbf {Додаткова модальність даних}\\}{8}{paragraph*.10}%
+\contentsline {paragraph}{\textbf {Кількість лейблів}\\}{10}{paragraph*.11}%
+\contentsline {chapter}{\numberline {3}Моделювання}{12}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Модель VCNN}{12}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Модель MLP}{13}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Модель LP}{13}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Модель LQP}{14}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Процес тренування}{14}{section.3.5}%
+\contentsline {paragraph}{\textbf {Цільові функції}\\}{14}{paragraph*.14}%
+\contentsline {paragraph}{\textit {BCEWithLogitsLoss}\\}{14}{paragraph*.15}%
+\contentsline {paragraph}{\textit {MSELoss}\\}{15}{paragraph*.16}%
+\contentsline {paragraph}{\textbf {Тренування VCNN}\\}{15}{paragraph*.17}%
+\contentsline {paragraph}{\textbf {Тренування MLP}\\}{16}{paragraph*.18}%
+\contentsline {paragraph}{\textbf {Тренування LP}\\}{16}{paragraph*.19}%
+\contentsline {paragraph}{\textbf {Тренування LQP}\\}{16}{paragraph*.20}%
+\contentsline {section}{\numberline {3.6}Процес тестування}{16}{section.3.6}%
+\contentsline {paragraph}{\textbf {Тестування класифікаційних моделей (VCNN, MLP, LP)}\\}{16}{paragraph*.21}%
+\contentsline {paragraph}{Розглянемо два основних види індикаторної функції:}{16}{paragraph*.22}%
+\contentsline {paragraph}{\textbf {Тестування композитної моделі}\\}{17}{paragraph*.23}%
+\contentsline {chapter}{\numberline {4}Експерименти}{18}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Датасет}{18}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Метрики}{20}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Тренування}{22}{section.4.3}%
+\contentsline {paragraph}{\textbf {Параметри навчання}\\}{22}{paragraph*.25}%
+\contentsline {paragraph}{\textbf {Процес навчання}\\}{22}{paragraph*.26}%
+\contentsline {chapter}{\numberline {5}Аналіз результатів}{24}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Аналіз компонентів системи}{24}{section.5.1}%
+\contentsline {paragraph}{\textbf {Додаткова модальність (MLP+LP)}\\}{24}{paragraph*.28}%
+\contentsline {paragraph}{\textbf {Передбачення кількості лейблів (LQP)}\\}{24}{paragraph*.29}%
+\contentsline {section}{\numberline {5.2}Порівнняня з існуючими рішеннями}{25}{section.5.2}%
+\contentsline {paragraph}{\textbf {Точність запропонованого рішення}}{26}{paragraph*.30}%
+\contentsline {paragraph}{\textbf {Модальність даних}}{26}{paragraph*.31}%
+\contentsline {paragraph}{\textbf {Індикаторна функція}}{26}{paragraph*.32}%
+\contentsline {section}{\numberline {5.3}Демонстративні приклади}{27}{section.5.3}%
+\contentsline {chapter}{Висновки}{29}{chapter*.34}%
+\contentsline {chapter}{Перелік посилань}{30}{chapter*.35}%
+\contentsline {chapter}{Додаток А\ Код лістинг}{32}{chapter*.35}%
+\contentsline {paragraph}{\textbf {Дані:}\\}{33}{paragraph*.37}%
+\contentsline {paragraph}{\textbf {Тренування:}\\}{33}{paragraph*.38}%
+\contentsline {paragraph}{\textbf {Тестування:}\\}{33}{paragraph*.39}%
+\contentsline {paragraph}{\textbf {Інше:}\\}{33}{paragraph*.40}%
+\contentsline {chapter}{Додаток Б\ Додаткові приклади}{33}{paragraph*.40}%
