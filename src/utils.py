@@ -6,27 +6,23 @@ from torch import Tensor
 from pathlib import Path
 from typing import Iterable
 from collections import defaultdict
-from torchvision.transforms import v2 as transforms
 from torchtext.data.utils import get_tokenizer
 from torchtext.vocab import build_vocab_from_iterator
+from torch.nn.functional import binary_cross_entropy_with_logits
 
 
-nlabels_f32 = transforms.Compose([
-    transforms.Lambda(lambda x: x.sum(axis=1)),
-    transforms.Lambda(lambda x: x.unsqueeze(1)),
-])
-
-# Calculated in eda.ipynb
-LAB_MEAN = 2.4186057952477
-LAB_STD = 1.5880828167376047
-
-nlabels_normalize = transforms.Compose([
-    transforms.Lambda(lambda x: (x - LAB_MEAN) / LAB_STD)
-])
-
-nlabels_denormalize = transforms.Compose([
-    transforms.Lambda(lambda x: (x * LAB_STD) + LAB_MEAN)
-])
+class WeightedBCEWithLogits:
+    
+    def __init__(self, pk: Tensor):
+        self.pk = pk
+    
+    def __call__(self, input: Tensor, target: Tensor):
+        wk = (target) * torch.exp(1-self.pk) + (1 - target) * torch.exp(self.pk)
+        return binary_cross_entropy_with_logits(
+            input = input,
+            target = target,
+            weight = wk,
+        )
 
 
 class Metrics:
@@ -135,6 +131,14 @@ class TagTransform:
         
     def __call__(self, sample: Iterable) -> Tensor:
         return self.encode(sample)
+    
+    def weight_ratios(self):
+        count_sum = self._tags["count"].sum()
+        tag_count = self._tags.to_dicts()
+        tag_count = {entry["name"]:entry["count"] for entry in tag_count}
+        pk = self.voc.get_itos()
+        pk = [tag_count[name] / count_sum for name in pk]
+        return torch.tensor(pk)
     
     def encode(self, sample: Iterable) -> Tensor:
         ftags = [t for t in sample if t in self.tags]

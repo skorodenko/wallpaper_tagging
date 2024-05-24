@@ -3,7 +3,7 @@ import torchvision
 import lightning as lg
 from torch import Tensor
 from argparse import Namespace
-from .utils import TagTransform, Metrics
+from .utils import TagTransform, Metrics, WeightedBCEWithLogits
 
 
 label_transform = TagTransform("./assets/preprocessed/Labels_nus-wide.ndjson")
@@ -45,7 +45,7 @@ class TagAttention(lg.LightningModule):
         self.classifier = torch.nn.Sequential(
             torch.nn.Linear(512, 81),
         )
-        self.loss_module = torch.nn.BCEWithLogitsLoss()
+        self.loss_module = WeightedBCEWithLogits(pk = label_transform.weight_ratios())
         self.activation = torch.nn.Sigmoid()
         self.metrics = Metrics(81)
     
@@ -88,7 +88,7 @@ class TagAttention(lg.LightningModule):
         )
         scheduler = torch.optim.lr_scheduler.MultiStepLR(
             optimizer,
-            milestones=[5,10], 
+            milestones=[5,10,15], 
             gamma=self.hparams.sched_gamma,
         )
         return [optimizer], [{"scheduler": scheduler, "interval": "epoch"}]
