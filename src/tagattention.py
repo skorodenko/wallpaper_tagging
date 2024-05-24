@@ -40,7 +40,7 @@ class TagAttention(lg.LightningModule):
             torch.nn.Linear(2048, 256)
         )
         self.attention = torch.nn.MultiheadAttention(
-            embed_dim=256, num_heads=16,
+            embed_dim=256, num_heads=64,
         )
         self.classifier = torch.nn.Sequential(
             torch.nn.Linear(256, 81),
