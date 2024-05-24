@@ -1,8 +1,8 @@
 import torch
 import lightning as lg
 from pathlib import Path
-from data import DataModule
-from models.compose import Model
+from src.data import DataModule
+from models.tagattention import Model
 from safetensors.torch import load_model
 from lightning.pytorch.loggers import CSVLogger
 

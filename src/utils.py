@@ -157,6 +157,11 @@ class TagTransform:
             out.append(self.voc.lookup_tokens(tokens))
         return out
 
+    def decode_threshold(self, cls: Tensor, threshold: float = 0.5) -> Tensor:
+        cls = cls > threshold
+        cls = cls.to(torch.int64)
+        return cls
+    
     def decode_topn(self, cls: Tensor, clen: Tensor) -> Tensor:
         sort_cls = cls.argsort(dim=1, descending=True)
         for i, (_class, _len) in enumerate(zip(sort_cls, clen)):

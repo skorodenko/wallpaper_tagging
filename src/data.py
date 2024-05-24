@@ -4,7 +4,7 @@ import pandas as pd
 import lightning as lg
 import torchvision
 from pathlib import Path
-from models.utils import TagTransform
+from .utils import TagTransform
 from torchvision.io import read_image, ImageReadMode
 from torchvision.transforms import v2 as transforms
 from torch.utils.data import Dataset, DataLoader

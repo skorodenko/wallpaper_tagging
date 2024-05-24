@@ -3,7 +3,7 @@ from models.lp import LP
 from models.mlp import MLP
 from models.lqp import LQP
 from models.vcnn import VCNN
-from models.compose import Model
+from models.tagattention import Model
 from safetensors.torch import save_file
 
 
