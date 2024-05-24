@@ -37,13 +37,13 @@ class TagAttention(lg.LightningModule):
             torch.nn.ReLU(inplace=True),
             torch.nn.Linear(2048, 2048),
             torch.nn.ReLU(inplace=True),
-            torch.nn.Linear(2048, 256)
+            torch.nn.Linear(2048, 512),
         )
         self.attention = torch.nn.MultiheadAttention(
-            embed_dim=256, num_heads=128,
+            embed_dim=512, num_heads=64,
         )
         self.classifier = torch.nn.Sequential(
-            torch.nn.Linear(256, 81),
+            torch.nn.Linear(512, 81),
         )
         self.loss_module = torch.nn.BCEWithLogitsLoss()
         self.activation = torch.nn.Sigmoid()
