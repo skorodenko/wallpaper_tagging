@@ -168,3 +168,4 @@ doc/template.run.xml
 doc/template.synctex.gz
 *.blg
 *.blg
+compose.safetensors

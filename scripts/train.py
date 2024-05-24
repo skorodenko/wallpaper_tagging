@@ -40,7 +40,7 @@ trainer = lg.Trainer(
 
 params = Namespace(
     lr = 0.001,
-    weight_decay = 0.01,
+    weight_decay = 0.1,
     sched_gamma = 0.1,
 )
 

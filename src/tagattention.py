@@ -11,7 +11,7 @@ label_transform = TagTransform("./assets/preprocessed/Labels_nus-wide.ndjson")
 
 class TagAttention(lg.LightningModule):
     
-    def __init__(self, params: Namespace, mode: str = "img+tags"):
+    def __init__(self, params: Namespace = None, mode: str = "image+tags"):
         super().__init__()
         self.save_hyperparameters(params)
         self.mode = mode
@@ -49,31 +49,36 @@ class TagAttention(lg.LightningModule):
         self.activation = torch.nn.Sigmoid()
         self.metrics = Metrics(81)
     
-#    def test_vcnn(self, x: Tensor, k: int = 3):
-#        image, _ = x
-#        pred = self.vcnn.predict(image)
-#        pred_topn = label_transform.decode_topn(pred, torch.tensor([k] * pred.shape[1]))
-#        return pred_topn
-#
-#    def test_vcnn_mlp(self, x: Tensor, k: int = 3):
-#        image, tags = x
-#        f_vis = self.vcnn.predict(image)
-#        f_text = self.mlp.predict(tags)
-#        f = torch.cat((f_vis, f_text), 1)
-#        pred = self.lp.predict(f)
-#        pred_topn = label_transform.decode_topn(pred, torch.tensor([k] * pred.shape[1]))
-#        return pred_topn
-#    
-#    def forward(self, x):
-#        match self.mode:
-#            case "vcnn":
-#                return self.test_vcnn(x, k=self.topk)
-#            case "vcnn+lqp":
-#                return self.test_vcnn_lqp(x)
-#            case "vcnn+mlp+lp":
-#                return self.test_vcnn_mlp_lp(x, k=self.topk)
-#            case "vcnn+mlp+lp+lqp":
-#                return self.test_vcnn_mlp_lp_lqp(x)
+    def test_image(self, x: Tensor, k: int = 3):
+        image, _ = x
+        image_embed = self.vis_transform(image)
+        tags_embed = torch.zeros_like(image_embed)
+        embed = torch.cat((image_embed, tags_embed), dim = 1)
+        batch_size = image_embed.shape[0]
+        embed = embed.reshape((batch_size, 2, 256))
+        pred, _ = self.attention(embed, embed, embed, need_weights=False)
+        pred = pred.sum(dim = 1)
+        pred = self.classifier(pred)
+        return pred
+
+    def test_image_tags(self, x: Tensor, k: int = 3):
+        image, tags = x
+        image_embed = self.vis_transform(image)
+        tags_embed = self.tags_transform(tags)
+        embed = torch.cat((image_embed, tags_embed), dim = 1)
+        batch_size = image_embed.shape[0]
+        embed = embed.reshape((batch_size, 2, 256))
+        pred, _ = self.attention(embed, embed, embed, need_weights=False)
+        pred = pred.sum(dim = 1)
+        pred = self.classifier(pred)
+        return pred
+    
+    def forward(self, x):
+        match self.mode:
+            case "image":
+                return self.test_image(x)
+            case "image+tags":
+                return self.test_image_tags(x)
     
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(
@@ -87,18 +92,6 @@ class TagAttention(lg.LightningModule):
             gamma=self.hparams.sched_gamma,
         )
         return [optimizer], [{"scheduler": scheduler, "interval": "epoch"}]
-    
-    def forward(self, x: tuple):
-        image, tags = x
-        image_embed = self.vis_transform(image)
-        tags_embed = self.tags_transform(tags)
-        embed = torch.cat((image_embed, tags_embed), dim = 1)
-        batch_size = image_embed.shape[0]
-        embed = embed.reshape((batch_size, 2, 256))
-        pred, _ = self.attention(embed, embed, embed, need_weights=False)
-        pred = pred.sum(dim = 1)
-        pred = self.classifier(pred)
-        return pred
     
     def training_step(self, batch, batch_idx):
         (image, tags, labels) = batch
@@ -133,11 +126,14 @@ class TagAttention(lg.LightningModule):
         self.log("H_F1", hf1, prog_bar=True)
         self.metrics.reset()
     
-#    def predict_step(self, batch, batch_idx):
-#        image, tags, _ = batch
-#        pred = self.forward((image, tags))
-#        pred = pred.to(torch.int64)
-#        return label_transform.decode(pred)
+    def predict_step(self, batch, batch_idx):
+        (image, tags, labels) = batch
+        pred = self.forward((image, tags))
+        labels = labels.to(torch.int64)
+        pred = self.activation(pred)
+        pred = label_transform.decode_threshold(pred, 0.5)
+        pred = pred.to(torch.int64)
+        return label_transform.decode(pred)
     
     def test_step(self, batch, batch_idx):
         self.validation_step(batch, batch_idx)
