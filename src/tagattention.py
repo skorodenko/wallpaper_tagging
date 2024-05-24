@@ -17,7 +17,7 @@ class TagAttention(lg.LightningModule):
         self.mode = mode
         self.metrics = Metrics(81)
         base = torchvision.models.resnet101(
-            weights=torchvision.models.ResNet101_Weights.IMAGENET1K_V1
+            weights=torchvision.models.ResNet101_Weights.IMAGENET1K_V2
         )
         self.vis_transform = torch.nn.Sequential(
             base.conv1,
@@ -30,20 +30,20 @@ class TagAttention(lg.LightningModule):
             base.layer4,
             base.avgpool,
             torch.nn.Flatten(),
-            torch.nn.Linear(base.fc.in_features, 256)
+            torch.nn.Linear(base.fc.in_features, 512)
         )
         self.tags_transform = torch.nn.Sequential(
             torch.nn.Linear(1000, 2048),
             torch.nn.ReLU(inplace=True),
             torch.nn.Linear(2048, 2048),
             torch.nn.ReLU(inplace=True),
-            torch.nn.Linear(2048, 256)
+            torch.nn.Linear(2048, 512)
         )
         self.attention = torch.nn.MultiheadAttention(
-            embed_dim=256, num_heads=64,
+            embed_dim=512, num_heads=64,
         )
         self.classifier = torch.nn.Sequential(
-            torch.nn.Linear(256, 81),
+            torch.nn.Linear(512, 81),
         )
         self.loss_module = torch.nn.BCEWithLogitsLoss()
         self.activation = torch.nn.Sigmoid()
@@ -55,7 +55,7 @@ class TagAttention(lg.LightningModule):
         tags_embed = torch.zeros_like(image_embed)
         embed = torch.cat((image_embed, tags_embed), dim = 1)
         batch_size = image_embed.shape[0]
-        embed = embed.reshape((batch_size, 2, 256))
+        embed = embed.reshape((batch_size, 2, 512))
         pred, _ = self.attention(embed, embed, embed, need_weights=False)
         pred = pred.sum(dim = 1)
         pred = self.classifier(pred)
@@ -67,7 +67,7 @@ class TagAttention(lg.LightningModule):
         tags_embed = self.tags_transform(tags)
         embed = torch.cat((image_embed, tags_embed), dim = 1)
         batch_size = image_embed.shape[0]
-        embed = embed.reshape((batch_size, 2, 256))
+        embed = embed.reshape((batch_size, 2, 512))
         pred, _ = self.attention(embed, embed, embed, need_weights=False)
         pred = pred.sum(dim = 1)
         pred = self.classifier(pred)
