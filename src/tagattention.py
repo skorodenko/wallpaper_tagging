@@ -30,21 +30,20 @@ class TagAttention(lg.LightningModule):
             base.layer4,
             base.avgpool,
             torch.nn.Flatten(),
-            torch.nn.Linear(base.fc.in_features, 128)
+            torch.nn.Linear(base.fc.in_features, 256)
         )
         self.tags_transform = torch.nn.Sequential(
             torch.nn.Linear(1000, 2048),
             torch.nn.ReLU(inplace=True),
             torch.nn.Linear(2048, 2048),
             torch.nn.ReLU(inplace=True),
-            torch.nn.Linear(2048, 128)
+            torch.nn.Linear(2048, 256)
         )
         self.attention = torch.nn.MultiheadAttention(
-            embed_dim=128, num_heads=64,
+            embed_dim=256, num_heads=64,
         )
         self.classifier = torch.nn.Sequential(
-            torch.nn.ReLU(inplace=True),
-            torch.nn.Linear(128, 81),
+            torch.nn.Linear(256, 81),
         )
         self.loss_module = torch.nn.BCEWithLogitsLoss()
         self.activation = torch.nn.Sigmoid()
@@ -89,7 +88,7 @@ class TagAttention(lg.LightningModule):
         )
         scheduler = torch.optim.lr_scheduler.MultiStepLR(
             optimizer,
-            milestones=[5,10,15], 
+            milestones=[5,10], 
             gamma=self.hparams.sched_gamma,
         )
         return [optimizer], [{"scheduler": scheduler, "interval": "epoch"}]
