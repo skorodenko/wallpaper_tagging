@@ -55,7 +55,7 @@ class TagAttention(lg.LightningModule):
         tags_embed = torch.zeros_like(image_embed)
         embed = torch.cat((image_embed, tags_embed), dim = 1)
         batch_size = image_embed.shape[0]
-        embed = embed.reshape((batch_size, 2, 256))
+        embed = embed.reshape((batch_size, 2, 512))
         pred, _ = self.attention(embed, embed, embed, need_weights=False)
         pred = pred.sum(dim = 1)
         pred = self.classifier(pred)
@@ -67,7 +67,7 @@ class TagAttention(lg.LightningModule):
         tags_embed = self.tags_transform(tags)
         embed = torch.cat((image_embed, tags_embed), dim = 1)
         batch_size = image_embed.shape[0]
-        embed = embed.reshape((batch_size, 2, 256))
+        embed = embed.reshape((batch_size, 2, 512))
         pred, _ = self.attention(embed, embed, embed, need_weights=False)
         pred = pred.sum(dim = 1)
         pred = self.classifier(pred)

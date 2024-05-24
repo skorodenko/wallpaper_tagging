@@ -11,7 +11,7 @@ TRAINOUT = Path("./assets/trainout")
 CKPT_PATH = TRAINOUT / "tagattention.ckpt"
 
 
-data = DataModule(batch_size = 32, prefetch_factor = 16, num_workers = 6)
+data = DataModule(batch_size = 32, prefetch_factor = 8, num_workers = 6)
 
 
 trainer = lg.Trainer(
