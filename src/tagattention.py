@@ -30,14 +30,14 @@ class TagAttention(lg.LightningModule):
             base.layer4,
             base.avgpool,
             torch.nn.Flatten(),
-            torch.nn.Linear(base.fc.in_features, 512)
+            torch.nn.Linear(base.fc.in_features, 128)
         )
         self.tags_transform = torch.nn.Sequential(
             torch.nn.Linear(1000, 2048),
             torch.nn.ReLU(inplace=True),
             torch.nn.Linear(2048, 2048),
             torch.nn.ReLU(inplace=True),
-            torch.nn.Linear(2048, 512),
+            torch.nn.Linear(2048, 128)
         )
         self.attention = torch.nn.MultiheadAttention(
             embed_dim=512, num_heads=64,
@@ -55,7 +55,7 @@ class TagAttention(lg.LightningModule):
         tags_embed = torch.zeros_like(image_embed)
         embed = torch.cat((image_embed, tags_embed), dim = 1)
         batch_size = image_embed.shape[0]
-        embed = embed.reshape((batch_size, 2, 512))
+        embed = embed.reshape((batch_size, 2, 128))
         pred, _ = self.attention(embed, embed, embed, need_weights=False)
         pred = pred.sum(dim = 1)
         pred = self.classifier(pred)
@@ -67,7 +67,7 @@ class TagAttention(lg.LightningModule):
         tags_embed = self.tags_transform(tags)
         embed = torch.cat((image_embed, tags_embed), dim = 1)
         batch_size = image_embed.shape[0]
-        embed = embed.reshape((batch_size, 2, 512))
+        embed = embed.reshape((batch_size, 2, 128))
         pred, _ = self.attention(embed, embed, embed, need_weights=False)
         pred = pred.sum(dim = 1)
         pred = self.classifier(pred)
