@@ -30,7 +30,7 @@ class TagAttention(lg.LightningModule):
             base.layer4,
             base.avgpool,
             torch.nn.Flatten(),
-            torch.nn.Linear(base.fc.in_features, 256)
+            torch.nn.Linear(base.fc.in_features, 512)
         )
         self.tags_transform = torch.nn.Sequential(
             torch.nn.Linear(1000, 2048),
