@@ -88,7 +88,7 @@ class TagAttention(lg.LightningModule):
         )
         scheduler = torch.optim.lr_scheduler.MultiStepLR(
             optimizer,
-            milestones=[5,10], 
+            milestones=[5,10,15], 
             gamma=self.hparams.sched_gamma,
         )
         return [optimizer], [{"scheduler": scheduler, "interval": "epoch"}]
