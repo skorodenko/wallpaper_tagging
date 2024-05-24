@@ -138,7 +138,7 @@ class TagTransform:
         tag_count = {entry["name"]:entry["count"] for entry in tag_count}
         pk = self.voc.get_itos()
         pk = [tag_count[name] / count_sum for name in pk]
-        return torch.tensor(pk)
+        return torch.tensor(pk, device="cuda:0")
     
     def encode(self, sample: Iterable) -> Tensor:
         ftags = [t for t in sample if t in self.tags]
