@@ -3,7 +3,7 @@ import torchvision
 import lightning as lg
 from torch import Tensor
 from argparse import Namespace
-from .utils import TagTransform, Metrics, WeightedBCEWithLogits
+from .utils import TagTransform, Metrics
 
 
 label_transform = TagTransform("./assets/preprocessed/Labels_nus-wide.ndjson")
