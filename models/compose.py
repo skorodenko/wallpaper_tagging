@@ -1,4 +1,3 @@
-import os
 import torch
 import lightning as lg
 from torch import Tensor

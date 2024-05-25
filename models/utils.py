@@ -35,67 +35,51 @@ class Metrics:
         self.num_classes = num_classes
         self.reset()
     
-    @property
-    def cls_correct(self):
-        return self._cls_correct
-    
-    @property
-    def cls_pred(self):
-        return self._cls_pred
-    
-    @property
-    def cls_ground(self):
-        return self._cls_ground
-    
-    @property
-    def im_correct(self):
-        return self._im_correct
-    
-    @property
-    def im_pred(self):
-        return self._im_pred
-    
-    @property
-    def im_ground(self):
-        return self._im_ground
-    
     def update(self, pred: Tensor, target: Tensor):
-        cls_correct = ((pred == 1) & (target == 1)).sum(dim=0).cpu().numpy()
-        cls_predicted = (pred == 1).sum(dim=0).cpu().numpy()
-        cls_ground = (target == 1).sum(dim=0).cpu().numpy()
-        im_correct = ((pred == 1) & (target == 1)).sum(dim=1).cpu().numpy()
-        im_predicted = (pred == 1).sum(dim=1).cpu().numpy()
-        im_ground = (target == 1).sum(dim=1).cpu().numpy()
-        self._cls_correct = np.add(self._cls_correct, cls_correct)
-        self._cls_pred = np.add(self._cls_pred, cls_predicted)
-        self._cls_ground = np.add(self._cls_ground, cls_ground)
-        self._im_correct = np.append(self._im_correct, im_correct)
-        self._im_pred = np.append(self._im_pred, im_predicted)
-        self._im_ground = np.append(self._im_ground, im_ground)
+        cls_tp = ((pred == 1) & (target == 1)).sum(dim=0).cpu().numpy()
+        cls_tn = ((pred == 0) & (target == 0)).sum(dim=0).cpu().numpy()
+        cls_fp = ((pred == 1) & (target == 0)).sum(dim=0).cpu().numpy()
+        cls_fn = ((pred == 0) & (target == 1)).sum(dim=0).cpu().numpy()
+        im_tp = ((pred == 1) & (target == 1)).sum(dim=1).cpu().numpy()
+        im_tn = ((pred == 0) & (target == 0)).sum(dim=1).cpu().numpy()
+        im_fp = ((pred == 1) & (target == 0)).sum(dim=1).cpu().numpy()
+        im_fn = ((pred == 0) & (target == 1)).sum(dim=1).cpu().numpy()
+        self._cls_tp = np.add(self._cls_tp, cls_tp)
+        self._cls_tn = np.add(self._cls_tn, cls_tn)
+        self._cls_fp = np.add(self._cls_fp, cls_fp)
+        self._cls_fn = np.add(self._cls_fn, cls_fn)
+        self._im_tp = np.append(self._im_tp, im_tp)
+        self._im_tn = np.append(self._im_tn, im_tn)
+        self._im_fp = np.append(self._im_fp, im_fp)
+        self._im_fn = np.append(self._im_fn, im_fn)
     
     def reset(self):
-        self._cls_correct = np.zeros(self.num_classes)
-        self._cls_pred = np.zeros(self.num_classes)
-        self._cls_ground = np.zeros(self.num_classes)
-        self._im_correct = np.array([])
-        self._im_pred = np.array([])
-        self._im_ground = np.array([])
+        self._cls_tp = np.zeros(self.num_classes)
+        self._cls_tn = np.zeros(self.num_classes)
+        self._cls_fp = np.zeros(self.num_classes)
+        self._cls_fn = np.zeros(self.num_classes)
+        self._im_tp = np.array([])
+        self._im_tn = np.array([])
+        self._im_fp = np.array([])
+        self._im_fn = np.array([])
     
     def CP(self):
+        scls_tp_fp = self._cls_tp + self._cls_fp 
         val = np.divide(
-            self.cls_correct, 
-            self.cls_pred,
-            out = np.zeros_like(self.cls_correct),
-            where = (self.cls_pred != 0),
+            self._cls_tp, 
+            scls_tp_fp,
+            out = np.zeros_like(self._cls_tp),
+            where = (scls_tp_fp != 0),
         )
         return val.mean()
     
     def CR(self):
+        scls_tp_fn = self._cls_tp + self._cls_fn
         val = np.divide(
-            self.cls_correct, 
-            self.cls_ground,
-            out = np.zeros_like(self.cls_correct),
-            where = (self.cls_ground != 0),
+            self._cls_tp, 
+            scls_tp_fn,
+            out = np.zeros_like(self._cls_tp),
+            where = (scls_tp_fn != 0),
         )
         return val.mean()
     
@@ -105,10 +89,12 @@ class Metrics:
         return 2 * (cp * cr) / (cp + cr + 1e-12)
     
     def IP(self):
-        return self.im_correct.sum() / (self.im_pred.sum() + 1e-12)
+        sim_tp_fp = self._im_tp + self._im_fp
+        return self._im_tp.sum() / (sim_tp_fp.sum() + 1e-12)
     
     def IR(self):
-        return self.im_correct.sum() / (self.im_ground.sum() + 1e-12)
+        sim_tp_fn = self._im_tp + self._im_fn
+        return self._im_tp.sum() / (sim_tp_fn.sum() + 1e-12)
     
     def IF1(self):
         ip = self.IP()

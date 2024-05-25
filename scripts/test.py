@@ -29,6 +29,6 @@ def compose_model(**kwargs):
 
 
 if __name__ == "__main__":
-    model = compose_model()
+    model = compose_model(mode="vcnn")
     with torch.no_grad():
         trainer.test(model, datamodule=data) 
