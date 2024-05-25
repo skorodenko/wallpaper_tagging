@@ -17,7 +17,7 @@ class TagAttention(lg.LightningModule):
         self.mode = mode
         self.metrics = Metrics(81)
         base = torchvision.models.resnet101(
-            weights=torchvision.models.ResNet101_Weights.IMAGENET1K_V1
+            weights=torchvision.models.ResNet101_Weights.IMAGENET1K_V2
         )
         self.vis_transform = torch.nn.Sequential(
             base.conv1,
