@@ -19,46 +19,46 @@
 \contentsline {chapter}{\numberline {1}Вступ}{12}{chapter.1}%
 \contentsline {chapter}{\numberline {2}Огляд існуючих рішень задачі маркування зображення}{14}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Базове рішення}{14}{section.2.1}%
-\contentsline {section}{\numberline {2.2}Додаткова модальність даних}{14}{section.2.2}%
-\contentsline {section}{\numberline {2.3}Кількість лейблів}{16}{section.2.3}%
-\contentsline {chapter}{\numberline {3}Моделювання}{18}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Модель VCNN}{18}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Модель MLP}{19}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Модель LP}{19}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Модель LQP}{20}{section.3.4}%
-\contentsline {section}{\numberline {3.5}Процес тренування}{20}{section.3.5}%
-\contentsline {paragraph}{\textbf {Цільові функції}\\}{20}{paragraph*.22}%
-\contentsline {paragraph}{\textit {BCEWithLogitsLoss}\\}{20}{paragraph*.23}%
-\contentsline {paragraph}{\textit {MSELoss}\\}{21}{paragraph*.24}%
-\contentsline {paragraph}{\textbf {Тренування VCNN}\\}{21}{paragraph*.25}%
-\contentsline {paragraph}{\textbf {Тренування MLP}\\}{22}{paragraph*.26}%
-\contentsline {paragraph}{\textbf {Тренування LP}\\}{22}{paragraph*.27}%
-\contentsline {paragraph}{\textbf {Тренування LQP}\\}{22}{paragraph*.28}%
-\contentsline {section}{\numberline {3.6}Процес тестування}{22}{section.3.6}%
-\contentsline {paragraph}{\textbf {Тестування класифікаційних моделей (VCNN, MLP, LP)}\\}{22}{paragraph*.29}%
-\contentsline {paragraph}{Розглянемо два основних види індикаторної функції:}{22}{paragraph*.30}%
-\contentsline {paragraph}{\textbf {Тестування композитної моделі}\\}{23}{paragraph*.31}%
-\contentsline {chapter}{\numberline {4}Експерименти}{24}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Датасет}{24}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Метрики}{26}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Тренування}{28}{section.4.3}%
-\contentsline {paragraph}{\textbf {Параметри навчання}\\}{28}{paragraph*.33}%
-\contentsline {paragraph}{\textbf {Процес навчання}\\}{28}{paragraph*.34}%
-\contentsline {chapter}{\numberline {5}Аналіз результатів}{30}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Аналіз компонентів системи}{30}{section.5.1}%
-\contentsline {paragraph}{\textbf {Додаткова модальність (MLP+LP)}\\}{30}{paragraph*.36}%
-\contentsline {paragraph}{\textbf {Передбачення кількості лейблів (LQP)}\\}{30}{paragraph*.37}%
-\contentsline {section}{\numberline {5.2}Порівнняня з існуючими рішеннями}{31}{section.5.2}%
-\contentsline {paragraph}{\textbf {Точність запропонованого рішення}}{32}{paragraph*.38}%
-\contentsline {paragraph}{\textbf {Модальність даних}}{32}{paragraph*.39}%
-\contentsline {paragraph}{\textbf {Індикаторна функція}}{32}{paragraph*.40}%
-\contentsline {section}{\numberline {5.3}Демонстративні приклади}{33}{section.5.3}%
-\contentsline {chapter}{Висновки}{35}{chapter*.42}%
-\contentsline {chapter}{Перелік посилань}{36}{chapter*.43}%
-\contentsline {chapter}{Додаток А\ Код лістинг}{38}{chapter*.43}%
-\contentsline {paragraph}{\textbf {Дані:}\\}{39}{paragraph*.45}%
-\contentsline {paragraph}{\textbf {Тренування:}\\}{39}{paragraph*.46}%
-\contentsline {paragraph}{\textbf {Тестування:}\\}{39}{paragraph*.47}%
-\contentsline {paragraph}{\textbf {Інше:}\\}{39}{paragraph*.48}%
-\contentsline {chapter}{Додаток Б\ Додаткові приклади}{39}{paragraph*.48}%
-\contentsline {chapter}{Додаток В\ Ілюстративний матеріал}{40}{figure.caption.62}%
+\contentsline {section}{\numberline {2.2}Додаткова модальність даних}{17}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Кількість лейблів}{19}{section.2.3}%
+\contentsline {chapter}{\numberline {3}Моделювання}{22}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Модель VCNN}{22}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Модель MLP}{23}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Модель LP}{24}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Модель LQP}{25}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Процес тренування}{26}{section.3.5}%
+\contentsline {paragraph}{\textbf {Цільові функції}\\}{26}{paragraph*.28}%
+\contentsline {paragraph}{\textit {BCEWithLogitsLoss}\\}{26}{paragraph*.29}%
+\contentsline {paragraph}{\textit {MSELoss}\\}{26}{paragraph*.30}%
+\contentsline {paragraph}{\textbf {Тренування VCNN}\\}{27}{paragraph*.31}%
+\contentsline {paragraph}{\textbf {Тренування MLP}\\}{27}{paragraph*.32}%
+\contentsline {paragraph}{\textbf {Тренування LP}\\}{27}{paragraph*.33}%
+\contentsline {paragraph}{\textbf {Тренування LQP}\\}{28}{paragraph*.34}%
+\contentsline {section}{\numberline {3.6}Процес тестування}{28}{section.3.6}%
+\contentsline {paragraph}{\textbf {Тестування класифікаційних моделей (VCNN, MLP, LP)}\\}{28}{paragraph*.35}%
+\contentsline {paragraph}{Розглянемо два основних види індикаторної функції:}{28}{paragraph*.36}%
+\contentsline {paragraph}{\textbf {Тестування композитної моделі}\\}{28}{paragraph*.37}%
+\contentsline {chapter}{\numberline {4}Експерименти}{30}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Датасет}{30}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Метрики}{32}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Тренування}{34}{section.4.3}%
+\contentsline {paragraph}{\textbf {Параметри навчання}\\}{34}{paragraph*.39}%
+\contentsline {paragraph}{\textbf {Процес навчання}\\}{34}{paragraph*.40}%
+\contentsline {chapter}{\numberline {5}Аналіз результатів}{36}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Аналіз компонентів системи}{36}{section.5.1}%
+\contentsline {paragraph}{\textbf {Додаткова модальність (MLP+LP)}\\}{36}{paragraph*.42}%
+\contentsline {paragraph}{\textbf {Передбачення кількості лейблів (LQP)}\\}{36}{paragraph*.43}%
+\contentsline {section}{\numberline {5.2}Порівнняня з існуючими рішеннями}{37}{section.5.2}%
+\contentsline {paragraph}{\textbf {Точність запропонованого рішення}}{38}{paragraph*.44}%
+\contentsline {paragraph}{\textbf {Модальність даних}}{38}{paragraph*.45}%
+\contentsline {paragraph}{\textbf {Індикаторна функція}}{38}{paragraph*.46}%
+\contentsline {section}{\numberline {5.3}Демонстративні приклади}{39}{section.5.3}%
+\contentsline {chapter}{Висновки}{41}{chapter*.48}%
+\contentsline {chapter}{Перелік посилань}{42}{chapter*.49}%
+\contentsline {chapter}{Додаток А\ Код лістинг}{44}{chapter*.49}%
+\contentsline {paragraph}{\textbf {Дані:}\\}{45}{paragraph*.51}%
+\contentsline {paragraph}{\textbf {Тренування:}\\}{45}{paragraph*.52}%
+\contentsline {paragraph}{\textbf {Тестування:}\\}{45}{paragraph*.53}%
+\contentsline {paragraph}{\textbf {Інше:}\\}{45}{paragraph*.54}%
+\contentsline {chapter}{Додаток Б\ Додаткові приклади}{45}{paragraph*.54}%
+\contentsline {chapter}{Додаток В\ Ілюстративний матеріал}{46}{figure.caption.68}%
