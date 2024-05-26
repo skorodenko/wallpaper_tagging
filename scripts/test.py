@@ -23,7 +23,7 @@ trainer = lg.Trainer(
 
 
 # Choose at most N tags to use
-os.environ["RANDOM_NTAGS"] = "1"
+# os.environ["RANDOM_NTAGS"] = "10"
 
 def compose_model(**kwargs):
     model = Model(**kwargs)
@@ -33,6 +33,6 @@ def compose_model(**kwargs):
 
 
 if __name__ == "__main__":
-    model = compose_model(mode="vcnn")
+    model = compose_model()
     with torch.no_grad():
         trainer.test(model, datamodule=data) 
