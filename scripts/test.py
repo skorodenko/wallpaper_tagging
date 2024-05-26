@@ -1,3 +1,4 @@
+import os
 import torch
 import lightning as lg
 from pathlib import Path
@@ -20,6 +21,9 @@ trainer = lg.Trainer(
     logger=CSVLogger(ROOT_DIR, "logs", version=0),
 )
 
+
+# Choose at most N tags to use
+os.environ["RANDOM_NTAGS"] = "1"
 
 def compose_model(**kwargs):
     model = Model(**kwargs)
