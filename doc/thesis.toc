@@ -1,0 +1,67 @@
+\selectlanguage *[]{ukrainian}
+\contentsline {paragraph}{\textbf {Акутальність теми:}}{5}{paragraph*.2}%
+\contentsline {paragraph}{\textbf {Мета дослідження:}}{5}{paragraph*.3}%
+\contentsline {paragraph}{\textbf {Завдання дослідження:}}{5}{paragraph*.4}%
+\contentsline {paragraph}{\textbf {Об'єкт дослідження:}}{6}{paragraph*.5}%
+\contentsline {paragraph}{\textbf {Предмет дослідження:}}{6}{paragraph*.6}%
+\contentsline {paragraph}{\textbf {Методи дослідження:}}{6}{paragraph*.7}%
+\contentsline {paragraph}{\textbf {Кінцевий результат:}}{6}{paragraph*.8}%
+\contentsline {paragraph}{\textbf {Ключові слова:}}{7}{paragraph*.9}%
+\contentsline {paragraph}{\textbf {Topic relevance.}}{8}{paragraph*.11}%
+\contentsline {paragraph}{\textbf {Research goal:}}{8}{paragraph*.12}%
+\contentsline {paragraph}{\textbf {Research objectives:}}{8}{paragraph*.13}%
+\contentsline {paragraph}{\textbf {Research object:}}{9}{paragraph*.14}%
+\contentsline {paragraph}{\textbf {Research subject:}}{9}{paragraph*.15}%
+\contentsline {paragraph}{\textbf {Research methods:}}{9}{paragraph*.16}%
+\contentsline {paragraph}{\textbf {End result of research:}}{9}{paragraph*.17}%
+\contentsline {paragraph}{\textbf {Keywords:}}{9}{paragraph*.18}%
+\contentsline {chapter}{Перелік умовних позначень, скорочень і термінів}{10}{chapter*.19}%
+\contentsline {chapter}{\numberline {1}Вступ}{13}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Огляд існуючих рішень задачі маркування зображення}{15}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Базове рішення}{15}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Додаткова модальність даних}{18}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Кількість лейблів}{20}{section.2.3}%
+\contentsline {chapter}{\numberline {3}Моделювання}{23}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Модель VCNN}{23}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Модель MLP}{24}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Модель LP}{25}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Модель LQP}{26}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Процес тренування}{27}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Цільові функції}{27}{subsection.3.5.1}%
+\contentsline {paragraph}{\textbf {BCEWithLogitsLoss}\\}{27}{paragraph*.28}%
+\contentsline {paragraph}{\textbf {MSELoss}\\}{27}{paragraph*.29}%
+\contentsline {subsection}{\numberline {3.5.2}Тренування VCNN}{28}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}Тренування MLP}{29}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.4}Тренування LP}{29}{subsection.3.5.4}%
+\contentsline {subsection}{\numberline {3.5.5}Тренування LQP}{29}{subsection.3.5.5}%
+\contentsline {section}{\numberline {3.6}Процес тестування}{30}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Тестування класифікаційних моделей (VCNN, MLP, LP)}{30}{subsection.3.6.1}%
+\contentsline {paragraph}{Розглянемо два основних види індикаторної функції:}{30}{paragraph*.30}%
+\contentsline {subsection}{\numberline {3.6.2}Тестування композитної моделі}{30}{subsection.3.6.2}%
+\contentsline {chapter}{\numberline {4}Експерименти}{31}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Датасет}{31}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Множина цільових класів}{33}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Числові характеристики датасету}{34}{subsection.4.1.2}%
+\contentsline {section}{\numberline {4.2}Тестові метрики}{35}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Тренування}{37}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Параметри навчання}{37}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Процес навчання}{38}{subsection.4.3.2}%
+\contentsline {chapter}{\numberline {5}Аналіз результатів}{39}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Аналіз компонентів моделі}{39}{section.5.1}%
+\contentsline {paragraph}{\textbf {Додаткова модальність (MLP+LP)}\\}{39}{paragraph*.35}%
+\contentsline {paragraph}{\textbf {Передбачення кількості лейблів (LQP)}\\}{39}{paragraph*.36}%
+\contentsline {section}{\numberline {5.2}Аналіз впливу додаткової інформації}{40}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Порівнняня з існуючими рішеннями}{42}{section.5.3}%
+\contentsline {paragraph}{\textbf {Точність запропонованого рішення}}{42}{paragraph*.37}%
+\contentsline {paragraph}{\textbf {Модальність даних}}{42}{paragraph*.38}%
+\contentsline {paragraph}{\textbf {Індикаторна функція}}{43}{paragraph*.39}%
+\contentsline {section}{\numberline {5.4}Демонстративні приклади}{44}{section.5.4}%
+\contentsline {chapter}{Висновки}{46}{chapter*.41}%
+\contentsline {chapter}{Перелік посилань}{47}{chapter*.42}%
+\contentsline {chapter}{Додаток А\ Код лістинг}{49}{chapter*.42}%
+\contentsline {paragraph}{\textbf {Дані:}\\}{50}{paragraph*.44}%
+\contentsline {paragraph}{\textbf {Тренування:}\\}{50}{paragraph*.45}%
+\contentsline {paragraph}{\textbf {Тестування:}\\}{50}{paragraph*.46}%
+\contentsline {paragraph}{\textbf {Інше:}\\}{50}{paragraph*.47}%
+\contentsline {chapter}{Додаток Б\ Додаткові приклади}{50}{paragraph*.47}%
+\contentsline {chapter}{Додаток В\ Ілюстративний матеріал}{51}{figure.caption.61}%

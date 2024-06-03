@@ -31,7 +31,8 @@ class CustomDataset(Dataset):
                 tmp = self.images[self.images["file_name"] == img]
                 df = pd.concat([df, tmp], ignore_index=True)
             self.images = df
-        if n_tags := int(os.environ.get("RANDOM_NTAGS")):
+        if n_tags := os.environ.get("RANDOM_NTAGS"):
+            n_tags = int(n_tags)
             self.images["tags"] = self.images["tags"].apply(lambda x: random.sample(x, n_tags) if len(x) > n_tags else x)
 
     def __len__(self):
